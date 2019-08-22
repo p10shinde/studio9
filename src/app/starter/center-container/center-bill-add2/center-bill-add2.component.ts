@@ -22,14 +22,15 @@ import { EditAddressComponent } from './HLayouts/edit-address/edit-address.compo
 import { Bill } from './Datastructures/bill';
 import { isEmpty } from 'rxjs/operators';
 import { EditQuantityComponent } from './HLayouts/edit-quantity/edit-quantity.component';
+import { OfferingService } from '../../Services/offering.service';
 
 
 @Component({
-  selector: 'app-center-bill-add',
-  templateUrl: './center-bill-add.component.html',
-  styleUrls: ['./center-bill-add.component.less']
+  selector: 'app-center-bill-add2',
+  templateUrl: './center-bill-add2.component.html',
+  styleUrls: ['./center-bill-add2.component.less']
 })
-export class CenterBillAddComponent implements OnInit {
+export class CenterBillAdd2Component implements OnInit {
 
   quantityElOldVal = 1;
   @ViewChildren('itemQuantity') components: QueryList<ElementRef>;
@@ -92,7 +93,8 @@ export class CenterBillAddComponent implements OnInit {
   //   };
   // };
 
-
+  offerings = [];
+  itemList = [];
 
 
   constructor(private dialog: MatDialog,
@@ -102,7 +104,8 @@ export class CenterBillAddComponent implements OnInit {
               private customerService: CustomerService,
               private snackbarService: CustomsnackbarService,
               private billService: BillService,
-              private zone: NgZone
+              private zone: NgZone,
+              private offeringService: OfferingService
               ) { }
 
   ngOnInit() {
@@ -136,6 +139,25 @@ export class CenterBillAddComponent implements OnInit {
         this.dateTime = new Date();
       }, 1000);
     });
+
+    this.offeringService.getAllOfferings().subscribe(offerings => {
+      console.log(offerings);
+      this.offerings = offerings;
+    },
+    err => {
+      console.log('Got error' + err);
+      if (err.status === 404) {
+        this.snackbarService.open('No offering found');
+      } else if (err.status === 422) {
+        this.snackbarService.open(err.error);
+      } else {
+        this.snackbarService.open(err.message);
+      }
+    },
+    () => {
+      console.log('Completed successfully');
+    });
+
   }
 
   resetBill(discountCheckBox: NgModel, advancepaycheck: NgModel, customerSelect: NgModel) {
@@ -566,5 +588,9 @@ export class CenterBillAddComponent implements OnInit {
     }, 3000);
   }
 
+
+  openServicesDialog(pckgObject) {
+    console.log(pckgObject);
+  }
 
 }

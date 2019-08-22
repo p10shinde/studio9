@@ -40,8 +40,8 @@ export class BillService {
     return this.http.get(`${this.baseUrl}bill`).pipe(catchError(this.errorService.handleError.bind(this)));
   }
 
-  clearBill(data: object) {
-    return this.http.put(`${this.baseUrl}bill/clear`, data).pipe(catchError(this.errorService.handleError.bind(this)));
+  receivepay(data: object) {
+    return this.http.put(`${this.baseUrl}bill/receivepay`, data).pipe(catchError(this.errorService.handleError.bind(this)));
   }
 
   printBill(billNo: number) {

@@ -1,0 +1,205 @@
+<div class="col-md-5 rightPart">
+      <h5 class="mainTitle">Sample Bill</h5>
+      <div class="form-group" class="mainButton">
+        <mat-form-field>
+          <mat-label>Customer name/ID</mat-label>
+            <mat-select name="customer" ngModel required #customer="ngModel"  [disabled]="billNo">
+              <mat-option *ngFor="let customer of customerNameList" [value]="customer" >
+                {{customer}}
+              </mat-option>
+            </mat-select>
+          <!-- <input matInput placeholder="Customer name/ID" [(ngModel)]="custNameOrID"> -->
+        </mat-form-field>
+      <button mat-raised-button (click)="selectCustomer(customer.value)" class="btn btn-normal" [disabled]="billNo || !customer.value">Select</button>
+        <div class="verticalSeparator"></div>
+        <button mat-raised-button (click)="saveBill()" class="btn btn-success">Save</button>
+        <button mat-raised-button (click)="printBillFinal()"  class="btn btn-info">Print Bill</button>
+      </div>
+      <!-- [disabled]="billNo === null" -->
+      <div class="thermalBillSample">
+        <mat-toolbar class="billControlToolbar">
+          <mat-checkbox name="discount" ngModel #discount="ngModel" (change)="discountCheckClicked()">Discount</mat-checkbox>
+          <div class="billControlSubTool" [hidden]="!discount.value">
+            <mat-button-toggle-group name="discountType" aria-label="Discount Type" class="discountTypeToggleGroup" #discountTypeModel="matButtonToggleGroup">
+              <mat-button-toggle aria-label="Discount Rupee" value="rupee" checked (change)="onDiscountTypeChange($event.value)">₹</mat-button-toggle>
+              <mat-button-toggle aria-label="Discount Percent" value="percent" (change)="onDiscountTypeChange($event.value)">%</mat-button-toggle>
+            </mat-button-toggle-group>
+            <mat-form-field class="discountAmountFormField">
+              <input type="number" matInput placeholder="Enter discount" #discountAmountModel="ngModel" [(ngModel)]="discountAmount"
+                      pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required (change)="addDiscount(discountAmountModel)">
+            </mat-form-field>
+            <!-- <div class="warn-message" *ngIf="discountAmountModel.errors">
+              <span class="errorText text-danger" *ngIf="discountAmountModel.errors['pattern'] ">
+                Incorrect value</span>
+            </div> -->
+          </div>
+        </mat-toolbar>
+        <mat-toolbar class="billControlToolbar">
+          <mat-checkbox name="advancepaycheck" ngModel #advancepaycheck="ngModel" (change)="advancePaymentCheckClicked()">Advance Payment</mat-checkbox>
+          <div class="billControlSubTool" [hidden]="!advancepaycheck.value">
+
+            <mat-form-field>
+              <input type="number" matInput placeholder="Enter amount" #advancePayModel="ngModel" [(ngModel)]="advancePayAmount"
+                      pattern="^[0-9]*$" required (change)="takeAdvancePay(advancePayModel)">
+            </mat-form-field>
+            <mat-button-toggle-group name="paymenttype" aria-label="Payment Type" class="paymentTypeToggleGroup" #aPaymentTypeModel="matButtonToggleGroup" [(ngModel)]="paymentType">
+              <mat-button-toggle aria-label="paytm" value="paytm" checked matTooltip="Paytm">
+                <img src="../../../../assets/images/paytm.png" alt="paytm">
+              </mat-button-toggle>
+              <mat-button-toggle aria-label="googlepay" value="googlepay" matTooltip="Google Pay">
+                  <img src="../../../../assets/images/googlepay.png" alt="googlepay">
+              </mat-button-toggle>
+              <mat-button-toggle aria-label="phonepe" value="phonepe" matTooltip="PhonePe">
+                  <img src="../../../../assets/images/phonepe.png" alt="phonepe">
+              </mat-button-toggle>
+              <mat-button-toggle aria-label="bhim" value="bhim" matTooltip="BHIM">
+                  <img src="../../../../assets/images/bhim.png" alt="bhim">
+              </mat-button-toggle>
+              <mat-button-toggle aria-label="cash" value="cash" matTooltip="Cash">
+                  <img src="../../../../assets/images/cash.png" alt="cash">
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+        </mat-toolbar>
+        <div class="warn-message font-weight-bold" *ngIf="discountAmountModel.errors || advancePayModel.errors">
+          <span class="errorText text-danger" *ngIf="(discountAmountModel.touched && !discountAmountModel.valid) || (advancePayModel.touched && !advancePayModel.valid)">
+            Incorrect value</span>
+        </div>
+        <div class="warn-message font-weight-bold" *ngIf="customError.hasError">
+          <span class="errorText text-danger">{{customError.error}}</span>
+        </div>
+        <div class="layout">
+          <div class="header">
+            <div class="flex-line">
+              <div class="flex-left single logo">
+                <img src="../../../../assets/images/logo.png" alt="">
+              </div>
+            </div>
+            <!-- <div class="flex-line">
+              <div class="flex-left single companyName">STUDIO9</div>
+            </div> -->
+            <div class="flex-line">
+              <div class="flex-left single companyAddress">Dehu Gaon</div>
+            </div>
+            <div class="flex-line">
+              <div class="flex-left companyContact">
+                +91 8800669070
+              </div>
+              <div class="flex-right billDateTime">{{dateTime | date : 'short'}}</div>
+            </div>
+            <div class="flex-line">
+              <div class="flex-left single billNo">Bill No: {{billNo}}</div>
+            </div>
+            <div class="flex-line">
+
+              <div class="flex-left userID">{{userFullName}} ({{userID}})</div>
+              <div class="flex-right custID" *ngIf="custName === null"></div><br />
+              <div class="flex-right custID" *ngIf="custName !== null">{{custName}} ({{custID}})</div><br />
+            </div>
+            <div class="flex-line">
+
+              <div class="flex-left userContact">{{userContact}}</div>
+              <div class="flex-right custContact">{{custContact}}</div>
+            </div>
+
+          </div>
+          <div class="singleSeparator">
+            <hr />
+            <hr />
+          </div>
+          <div class="content">
+            <div class="invoice">INVOICE</div>
+            <table>
+              <thead>
+                <th>Sr</th>
+                <th>Description</th>
+                <!-- <th>Price</th> -->
+                <th>Amount</th>
+              </thead>
+
+              <tbody>
+                <tr *ngIf="cartItems.length == 0">
+                  <td colspan="3" class="addItemWarning">
+                    Please add items to cart to generate bill
+                  </td>
+                </tr>
+                <tr *ngFor="let item of cartItems; let i = index">
+                  <td>{{i+1}}</td>
+                  <td>{{item.descr}}</td>
+                  <!-- <td>{{item.price}}</td> -->
+                  <td>{{item.price | currency: 'INR'}}</td>
+                </tr>
+                <!-- <tr>
+                  <td>1</td>
+                  <td>PASS8</td>
+                  <td>20</td>
+                  <td>20</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>VShoot Half</td>
+                  <td>7500</td>
+                  <td>7500</td>
+                </tr> -->
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2">Total</td>
+                  <td>{{cartItemsTotal | currency: 'INR' : 'symbol' : '1.0-0'}}</td>
+                </tr>
+                <tr *ngIf="discountType==='rupee' && discount.value && discountAmount>0 && cartItemsTotal>0">
+                  <td colspan="2">Discount</td>
+                  <td>-{{ discountAmount |currency: 'INR'}}</td>
+                </tr>
+                <tr *ngIf="discountType==='percent' && discount.value && discountAmount>0 && cartItemsTotal>0">
+                  <td colspan="2">Discount</td>
+                  <td>-{{ discountAmount }}% [{{cartItemsTotal - billDiscountedTotal | currency: 'INR'}}]</td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                      <div class="singleSeparator">
+                          <hr />
+                          <hr />
+                        </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">Grand Total</td>
+                  <td>{{ billDiscountedTotal | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
+                </tr>
+                <tr *ngIf="advancepaycheck.value && advancePayAmount>0 && cartItemsTotal>0">
+                  <td colspan="2">Advance Payment</td>
+                  <td>{{ advancePayAmount | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                      <div class="singleSeparator">
+                          <hr />
+                          <hr />
+                        </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td colspan="2">Pending Payment</td>
+                  <td>{{ pendingAmount | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+
+
+          <div class="footer">
+            <div class="thankTitle">
+              ☺ Cherish your moments with us ☺
+            </div>
+          </div>
+
+          <div class="singleSeparator">
+              <hr />
+              <hr />
+            </div>
+        </div>
+      </div>
+    </div>

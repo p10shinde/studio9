@@ -19,7 +19,7 @@ import { MatTableModule, MatCheckboxModule, MatBottomSheetModule, MatListModule,
 import { CenterReportComponent } from './center-report/center-report.component';
 import { CenterBillAddComponent } from './center-bill-add/center-bill-add.component';
 import { FormsModule } from '@angular/forms';
-import { PassportComponent } from './center-bill-add/HLayouts/passport/passport.component';
+import { PassportComponent } from './center-bill-add2/HLayouts/passport/passport.component';
 import { PreweddingComponent } from './center-bill-add/HLayouts/prewedding/prewedding.component';
 import { WeddingComponent } from './center-bill-add/HLayouts/wedding/wedding.component';
 import { BirthdayComponent } from './center-bill-add/HLayouts/birthday/birthday.component';
@@ -28,6 +28,7 @@ import { EditAddressComponent } from './center-bill-add/HLayouts/edit-address/ed
 import { DetailsActiveRowDirective } from './center-bill-list/details-active-row.directive';
 import { CenterCustomerComponent } from './center-customer/center-customer.component';
 import { EditQuantityComponent } from './center-bill-add/HLayouts/edit-quantity/edit-quantity.component';
+import { CenterBillAdd2Component } from './center-bill-add2/center-bill-add2.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { EditQuantityComponent } from './center-bill-add/HLayouts/edit-quantity/
                   PassportComponent, PreweddingComponent, WeddingComponent, BirthdayComponent,
                   CustomComponent, EditAddressComponent, DetailsActiveRowDirective,
                   CenterCustomerComponent,
-                  EditQuantityComponent],
+                  EditQuantityComponent,
+                  CenterBillAdd2Component],
   imports: [
     CommonModule,
     CenterContainerRoutingModule,
@@ -65,7 +67,8 @@ import { EditQuantityComponent } from './center-bill-add/HLayouts/edit-quantity/
     BirthdayComponent,
     CustomComponent,
     EditAddressComponent,
-    EditQuantityComponent
+    EditQuantityComponent,
+    CenterBillAdd2Component
   ],
   exports: [ CenterBillListComponent ]
 })

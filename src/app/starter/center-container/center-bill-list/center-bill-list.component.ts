@@ -96,15 +96,18 @@ export class CenterBillListComponent implements OnInit {
     billTotal: null,
     discountAmount: null,
     billDiscountedTotal: null,
-    aPaymentType: null,
-    pPaymentType: 'paytm',
-    advancePayment: null,
+    paymentHistory: null,
+    // aPaymentType: null,
+    // pPaymentType: 'paytm',
+    // advancePayment: null,
     pendingPayment: null,
-    billClearDate: null
+    billClearDate: null,
+    clearedBy: null
   };
   activeBillNo = null;
+  newPayment = 0;
   billListToolbarActive = false;
-  pPaymentType = 'paytm';
+  paymentType = 'paytm';
 
   filterByCategories: string[] = [
     'Bill No',
@@ -120,6 +123,11 @@ export class CenterBillListComponent implements OnInit {
 
   activeFilterType = null;
   selectedFilter = '';
+
+  customError = {
+    hasError: false,
+    error: ''
+  };
 
   ngOnInit() {
     this.loggedin = this.userService.checkLoggedIn();
@@ -159,9 +167,10 @@ export class CenterBillListComponent implements OnInit {
     this.billDetailsSchema.billTotal = rowData.billTotal;
     this.billDetailsSchema.discountAmount = rowData.discountAmount;
     this.billDetailsSchema.billDiscountedTotal = rowData.billDiscountedTotal;
-    this.billDetailsSchema.aPaymentType = rowData.aPaymentType;
-    this.billDetailsSchema.pPaymentType = rowData.pPaymentType;
-    this.billDetailsSchema.advancePayment = rowData.advancePayment;
+    // this.billDetailsSchema.aPaymentType = rowData.aPaymentType;
+    // this.billDetailsSchema.pPaymentType = rowData.pPaymentType;
+    // this.billDetailsSchema.advancePayment = rowData.advancePayment;
+    this.billDetailsSchema.paymentHistory = rowData.paymentHistory;
     this.billDetailsSchema.pendingPayment = rowData.pendingPayment;
     this.billDetailsSchema.billClearDate = rowData.billClearDate;
 
@@ -201,26 +210,58 @@ export class CenterBillListComponent implements OnInit {
     this.filterTable(this.pendingPayment, false, query);
   }
 
-  paymentReceived() {
-    const data = {
-        pPaymentType : this.pPaymentType,
-        clearedBy: this.billDetailsSchema.userID,
-        pendingPayment : 0,
-        billNo : this.billDetailsSchema.billNo
-    };
-    this.billService.clearBill(data)
-      .subscribe(respBillDetails => {
-        this.snackbarService.open(`Bill : ${respBillDetails.billNo} cleared successfully`, 'success');
-        this.dataSource.data = this.dataSource.data.map(rec => {
-          this.billDetailsSchema.pendingPayment = respBillDetails.pendingPayment;
-          this.billDetailsSchema.pPaymentType = respBillDetails.pPaymentType;
-          this.billDetailsSchema.billClearDate = respBillDetails.billClearDate;
+  panelClosed() {
+    this.panelOpenState = false;
+  }
+  panelOpened() {
+    this.panelOpenState = true;
+  }
 
+  paymentReceived(newPaymentModel: NgModel) {
+
+    const newAmount = +this.newPayment;
+    if (newAmount > this.billDetailsSchema.pendingPayment) {
+      this.displaycustomError('Amount can not be greater than pending amount');
+      return false;
+    }
+
+    if (newAmount === 0) {
+      this.displaycustomError(`Amount ${newAmount} is not a valid amount`);
+      return false;
+    }
+
+    let data = {};
+    if (newPaymentModel.valid && newAmount <= this.billDetailsSchema.pendingPayment) {
+      const paymentHistory = [{
+        mode: this.paymentType,
+        amount: newAmount,
+        userID: this.billDetailsSchema.userID
+      }];
+      data = {
+          paymentHistory : [...this.billDetailsSchema.paymentHistory, ...paymentHistory],
+          clearedBy: this.billDetailsSchema.userID,
+          pendingPayment : this.billDetailsSchema.pendingPayment - newAmount,
+          billNo : this.billDetailsSchema.billNo
+      };
+
+    }
+
+
+
+    this.billService.receivepay(data)
+      .subscribe(respBillDetails => {
+        this.snackbarService.open(`Payment received for bill : ${respBillDetails.billNo}`, 'success');
+        this.dataSource.data = this.dataSource.data.map(rec => {
           if (rec.billNo === respBillDetails.billNo) {
-            rec.pPaymentType = respBillDetails.pPaymentType;
+            this.panelOpenState = true;
+            this.billDetailsSchema.pendingPayment = respBillDetails.pendingPayment;
+            this.billDetailsSchema.billClearDate = respBillDetails.billClearDate;
+            this.billDetailsSchema.clearedBy = respBillDetails.clearedBy;
+            this.billDetailsSchema.paymentHistory = respBillDetails.paymentHistory;
             rec.clearedBy = respBillDetails.clearedBy;
             rec.pendingPayment = respBillDetails.pendingPayment;
             rec.billClearDate = respBillDetails.billClearDate;
+            rec.paymentHistory = respBillDetails.paymentHistory;
             return rec;
           }
           return rec;
@@ -240,6 +281,20 @@ export class CenterBillListComponent implements OnInit {
         console.log('Completed successfully');
       });
 
+  }
+
+  displaycustomError(error) {
+    this.customError = {
+      hasError: true,
+      error
+    };
+
+    setTimeout(() => {
+      this.customError = {
+        hasError: false,
+        error: ''
+      };
+    }, 3000);
   }
 }
 

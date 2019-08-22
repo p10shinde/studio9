@@ -99,7 +99,7 @@
                       <mat-form-field class="itemQuantitySpecial">
                         <!-- {{item.qty}} -->
                         <input type="number" matInput name="itemQuantity" [(ngModel)]="item.qty" readonly
-                        (click)="chck('passportItemList', item, itemQuantity, 'passportTotal')"
+                        (click)="getQunatity('passportItemList', item, itemQuantity, 'passportTotal')"
                         #itemQuantity pattern="^[1-9][0-9]*$">
                       </mat-form-field>
                       <button type="button" mat-raised-button class="btn btn-normal itemQButton itemQPlusBtn" (click)="itemQPButton('passportItemList', item, itemQuantity, 'passportTotal')">+</button>
@@ -148,7 +148,7 @@
                         <mat-form-field class="itemQuantitySpecial">
                           <!-- {{item.qty}} -->
                           <input type="number" matInput name="itemQuantity" [(ngModel)]="item.qty" readonly
-                          (click)="chck('preWeddingItemList', item, itemQuantity, 'preweddingTotal')"
+                          (click)="getQunatity('preWeddingItemList', item, itemQuantity, 'preweddingTotal')"
                           #itemQuantity pattern="^[1-9][0-9]*$">
                         </mat-form-field>
                         <button type="button" mat-raised-button class="btn btn-normal itemQButton itemQPlusBtn" (click)="itemQPButton('preWeddingItemList', item, itemQuantity, 'preweddingTotal')">+</button>
@@ -196,7 +196,7 @@
                         <mat-form-field class="itemQuantitySpecial">
                           <!-- {{item.qty}} -->
                           <input type="number" matInput name="itemQuantity" [(ngModel)]="item.qty" readonly
-                            (click)="chck('weddingItemList', item, itemQuantity, 'weddingTotal')"
+                            (click)="getQunatity('weddingItemList', item, itemQuantity, 'weddingTotal')"
                             #itemQuantity pattern="^[1-9][0-9]*$">
                         </mat-form-field>
                         <button type="button" mat-raised-button class="btn btn-normal itemQButton itemQPlusBtn" (click)="itemQPButton('weddingItemList', item, itemQuantity, 'weddingTotal')">+</button>
@@ -243,7 +243,7 @@
                         <mat-form-field class="itemQuantitySpecial">
                           <!-- {{item.qty}} -->
                           <input type="number" matInput name="itemQuantity" [(ngModel)]="item.qty" readonly
-                            (click)="chck('birthdayItemList', item, itemQuantity, 'birthdayItemList')"
+                            (click)="getQunatity('birthdayItemList', item, itemQuantity, 'birthdayItemList')"
                             #itemQuantity pattern="^[1-9][0-9]*$">
                         </mat-form-field>
                         <button type="button" mat-raised-button class="btn btn-normal itemQButton itemQPlusBtn" (click)="itemQPButton('birthdayItemList', item, itemQuantity, 'birthdayTotal')">+</button>
@@ -290,7 +290,7 @@
                           <mat-form-field class="itemQuantitySpecial">
                             <!-- {{item.qty}} -->
                             <input type="number" matInput name="itemQuantity" [(ngModel)]="item.qty" readonly
-                              (click)="chck('customItemList', item, itemQuantity, 'customItemList')"
+                              (click)="getQunatity('customItemList', item, itemQuantity, 'customItemList')"
                               #itemQuantity pattern="^[1-9][0-9]*$">
                           </mat-form-field>
                           <button type="button" mat-raised-button class="btn btn-normal itemQButton itemQPlusBtn" (click)="itemQPButton('customItemList', item, itemQuantity, 'customTotal')">+</button>
@@ -342,7 +342,7 @@
           </mat-select>
         <!-- <input matInput placeholder="Customer name/ID" [(ngModel)]="custNameOrID"> -->
       </mat-form-field>
-    <button mat-raised-button (click)="selectCustomer(customer.value)" class="btn btn-normal" [disabled]="billNo">Select</button>
+    <button mat-raised-button (click)="selectCustomer(customer.value)" class="btn btn-normal" [disabled]="billNo || !customer.value">Select</button>
       <div class="verticalSeparator"></div>
       <button mat-raised-button (click)="saveBill()" class="btn btn-success">Save</button>
       <button mat-raised-button (click)="printBillFinal()"  class="btn btn-info">Print Bill</button>
@@ -351,28 +351,28 @@
     <div class="thermalBillSample">
       <mat-toolbar class="billControlToolbar">
         <mat-checkbox name="discount" ngModel #discount="ngModel" (change)="discountCheckClicked()">Discount</mat-checkbox>
-        <div class="billControlSubTool" *ngIf="discount.value">
+        <div class="billControlSubTool" [hidden]="!discount.value">
           <mat-button-toggle-group name="discountType" aria-label="Discount Type" class="discountTypeToggleGroup" #discountTypeModel="matButtonToggleGroup">
             <mat-button-toggle aria-label="Discount Rupee" value="rupee" checked (change)="onDiscountTypeChange($event.value)">₹</mat-button-toggle>
             <mat-button-toggle aria-label="Discount Percent" value="percent" (change)="onDiscountTypeChange($event.value)">%</mat-button-toggle>
           </mat-button-toggle-group>
           <mat-form-field class="discountAmountFormField">
-            <input matInput placeholder="Enter discount" #discountAmountModel="ngModel" [(ngModel)]="discountAmount"
-                    pattern="[+-]?([0-9]*[.])?[0-9]+" required (change)="addDiscount(discountAmountModel)">
+            <input type="number" matInput placeholder="Enter discount" #discountAmountModel="ngModel" [(ngModel)]="discountAmount"
+                    pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required (change)="addDiscount(discountAmountModel)">
           </mat-form-field>
-          <div class="warn-message" *ngIf="discountAmountModel.errors">
+          <!-- <div class="warn-message" *ngIf="discountAmountModel.errors">
             <span class="errorText text-danger" *ngIf="discountAmountModel.errors['pattern'] ">
               Incorrect value</span>
-          </div>
+          </div> -->
         </div>
       </mat-toolbar>
       <mat-toolbar class="billControlToolbar">
         <mat-checkbox name="advancepaycheck" ngModel #advancepaycheck="ngModel" (change)="advancePaymentCheckClicked()">Advance Payment</mat-checkbox>
-        <div class="billControlSubTool" *ngIf="advancepaycheck.value">
+        <div class="billControlSubTool" [hidden]="!advancepaycheck.value">
 
           <mat-form-field>
-            <input matInput placeholder="Enter amount" #advancePayModel="ngModel" [(ngModel)]="advancePayAmount"
-                    pattern="[+-]?([0-9]*[.])?[0-9]+" required (change)="takeAdvancePay(advancePayModel)">
+            <input type="number" matInput placeholder="Enter amount" #advancePayModel="ngModel" [(ngModel)]="advancePayAmount"
+                    pattern="^[0-9]*$" required (change)="takeAdvancePay(advancePayModel)">
           </mat-form-field>
           <mat-button-toggle-group name="paymenttype" aria-label="Payment Type" class="paymentTypeToggleGroup" #aPaymentTypeModel="matButtonToggleGroup" [(ngModel)]="paymentType">
             <mat-button-toggle aria-label="paytm" value="paytm" checked matTooltip="Paytm">
@@ -391,12 +391,15 @@
                 <img src="../../../../assets/images/cash.png" alt="cash">
             </mat-button-toggle>
           </mat-button-toggle-group>
-          <div class="warn-message" *ngIf="advancePayModel.errors">
-            <span class="errorText text-danger" *ngIf="advancePayModel.errors['pattern'] ">
-              Incorrect value</span>
-          </div>
         </div>
       </mat-toolbar>
+      <div class="warn-message font-weight-bold" *ngIf="discountAmountModel.errors || advancePayModel.errors">
+        <span class="errorText text-danger" *ngIf="(discountAmountModel.touched && !discountAmountModel.valid) || (advancePayModel.touched && !advancePayModel.valid)">
+          Incorrect value</span>
+      </div>
+      <div class="warn-message font-weight-bold" *ngIf="customError.hasError">
+        <span class="errorText text-danger">{{customError.error}}</span>
+      </div>
       <div class="layout">
         <div class="header">
           <div class="flex-line">

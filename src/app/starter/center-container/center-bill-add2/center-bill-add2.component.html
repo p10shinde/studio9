@@ -1,0 +1,145 @@
+<!-- <div class="outerBill">
+<div class="bill">
+  <div class="header row">
+    <div class="left col-md-2">
+        <img src="../../../../assets/images/logo.png" alt="">
+    </div>
+    <div class="center col-md-8">
+        <h3 class="title">STUDIO9</h3>
+        <p class="myp address">Shop no 1 Sajjan plaza chapeka chowk chinchwad pune 411033</p>
+        <p class="myp tel">+91 8800669070</p>
+        <p class="myp gst">GSTIN: 27AASPJ0418P1Z7</p>
+    </div>
+    <div class="right col-md-2">
+        <p class="myp">Original for Receipient</p>
+    </div>
+  </div>
+  <div class="row content">
+    <div class="col-md-12 myCol">
+      <table class="table table-bordered">
+        <thead>
+          <th colspan="4" class="text-center font-weight-bold fle" style="line-height:2">Tax Invoice</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="fle">Invoice no: 9067</td>
+            <td class="fle" colspan="3"></td>
+        </tr>
+          <tr>
+            <td class="fle">Invoice date: 12.06.2019</td>
+            <td class="fle" colspan="3"></td>
+          </tr>
+          <tr>
+            <td class="p-0">
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="b0 fle" style="width:70%">Charge(Y/N):</td>
+                    <td class="bt0 br0 bb0">N</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td class="fle">Date of Service:06.06.2019</td>
+          </tr>
+          <tr>
+            <td class="p-0">
+              <table>
+                  <tbody>
+                    <tr>
+                      <td class="b0 fle" style="width:70%">State: Maharashtra</td>
+                      <td class="bt0 br0 bb0" style="width:15%">code</td>
+                      <td class="bt0 br0 bb0">27</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </td>
+            <td fle>Place of Service:</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="footer">
+
+  </div>
+</div>
+
+</div> -->
+
+<div class="row main_container">
+    <div class="col-md-7 leftPart">
+      <h5 class="mainTitle">Select Items</h5>
+      <div class="form-group" class="submitButton">
+        <!-- <button mat-raised-button (click)="resetBill( discount, advancepaycheck, customer)" class="btn btn-warning">New</button> -->
+      </div>
+      <!-- <form #itemsForm="ngForm"> -->
+      <div class="form">
+        <div class="row">
+          <div class="col-md-12">
+  <!-- PASSPORT -->
+            <div class="form-group offering" *ngFor="let offering of offerings; let i = index">
+              <h3>{{offering.name}}</h3>
+              <hr>
+                <div class="col" style="text-align:left" *ngFor="let pckg of offering.list">
+                    <label><mat-checkbox name="package" ngModel #package="ngModel" class="packageCheckbox">{{pckg.name}}</mat-checkbox></label>
+                    <label for="">
+                      <div class="col input-group" *ngIf="package.value">
+                        <button mat-raised-button class="btn btn-normal" (click)="openServicesDialog(pckg)">Choose template</button>
+                      </div>
+                    </label>
+                    <label class="itemCount" *ngIf="showSubcontainer('passportItemList', 'passportTotal', passport.value)">
+                      {{passportItemList.length}}</label>
+                </div>
+              <!-- <div class="itemList" *ngIf="showSubcontainer('passportItemList', 'passportTotal', passport.value)">
+                <ol >
+                  <li *ngFor="let item of passportItemList; let i = index;">
+                    {{item.descr}}
+                     <span class="close" (click)="removeItemFromList('passportItemList','passportTotal',item, passport)">&times;</span>
+                     <span class="itemPrice itemQuantity">
+                       <button type="button" mat-raised-button class="btn btn-normal itemQButton itemQMinusBtn" (click)="itemQMButton('passportItemList', item, itemQuantity, 'passportTotal')">-</button>
+                        <mat-form-field class="itemQuantitySpecial">
+                          <input type="number" matInput name="itemQuantity" [(ngModel)]="item.qty" readonly
+                          (click)="getQunatity('passportItemList', item, itemQuantity, 'passportTotal')"
+                          #itemQuantity pattern="^[1-9][0-9]*$">
+                        </mat-form-field>
+                        <button type="button" mat-raised-button class="btn btn-normal itemQButton itemQPlusBtn" (click)="itemQPButton('passportItemList', item, itemQuantity, 'passportTotal')">+</button>
+                     </span>
+                     <span class="itemPrice">{{item.price | currency: 'INR'}}</span>
+                     <br>
+                     <span class="itemAddress">
+                       {{(item.address)}}
+                       <i class="material-icons add_loc" matTooltip="Add address" (click)="addAddress('passportItemList',item)" *ngIf="!item.address">
+                       add_location
+                       </i>
+                       <i class="material-icons edit_loc" matTooltip="Edit address" (click)="addAddress('passportItemList',item)" *ngIf="item.address">
+                        edit_location
+                        </i>
+                      </span>
+                  </li>
+                </ol>
+              </div> -->
+              <!-- <hr class="hr-mid" *ngIf="showSubcontainer('passportItemList', 'passportTotal', passport.value)">
+              <div class="itemListTotal itemList" *ngIf="showSubcontainer('passportItemList', 'passportTotal', passport.value)">
+                <span>Total</span>
+                <span class="itemPrice">{{passportTotal | currency: 'INR'}}</span>
+              </div> -->
+            </div>
+
+  <!-- -------------------------------------------------------------------------- -->
+            <!-- <div class="cartItemsFinal" *ngIf="cartItems.length>0">
+                <hr class="hr-final" >
+                <span>Total</span>
+                <span class="itemPrice">{{ cartItemsTotal | currency: 'INR'}}</span>
+                <hr class="hr-final" >
+            </div> -->
+
+            </div>
+          </div>
+
+      <!-- </form> -->
+        </div>
+  </div>
+
+
+  </div>

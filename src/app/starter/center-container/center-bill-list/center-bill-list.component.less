@@ -1,5 +1,6 @@
 table {
-  background: #7e4536;
+  // background: #7e4536;
+  background: transparent;
   box-shadow: none;
   border-collapse: collapse;
 }
@@ -108,6 +109,82 @@ table.billBaicInfoTable {
   }
 }
 
+.paymentHistoryAccord {
+  table.paymentHistoryTable {
+    margin-bottom: .5rem !important;
+    td {
+      padding: 0.5rem;
+      vertical-align: middle;
+      img {
+        width: 25px;
+      }
+    }
+
+    tbody {
+      background: #28a745;
+    }
+
+    td:first-child, td:last-child {
+      width: 1%;
+      text-align: center;
+    }
+    td:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    td:last-child {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
+    td:nth-child(2) {
+      width: 15%;
+    }
+
+  }
+  ::ng-deep mat-expansion-panel {
+    background: #68382b;
+    .mat-expansion-panel-header {
+      background: #68382b;
+    }
+
+    .mat-expansion-panel-header-title {
+      color: #fff;
+    }
+
+    .mat-expansion-indicator::after {
+      color: #fff;
+    }
+
+    .mat-expansion-panel-content {
+      background: #623f36;
+    }
+
+    .mat-expansion-panel-body {
+      padding: 25px 10px 25px 15px;
+      max-height: 241px;
+      overflow: auto;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+      width: .5em;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #421f16;
+      border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #361a12;
+    }
+  }
+}
+
+
 .main_container {
   height: 100%;
   overflow: hidden;
@@ -154,11 +231,17 @@ table.billBaicInfoTable {
 
   .rightPart {
     padding-left: 10px;
+    .billDetailsHeader {
+      display: flex;
+    }
     .close {
       cursor: pointer;
       color: #fff;
       font-size: 30px;
       padding-right: 10px;
+      flex-grow: 1;
+      flex-flow: row-reverse;
+      display: flex;
     }
   }
 
@@ -166,6 +249,7 @@ table.billBaicInfoTable {
     height: calc(100% - 52px);
     width: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     padding-right: 10px;
     padding-left: 10px;
     img.empty_image {
@@ -191,8 +275,11 @@ table.billBaicInfoTable {
       }
     }
     div.pendingPaymentBlock {
+      display: inline-block;
+      margin-bottom: 20px;
       button.receive_payment {
-        float: right;
+        vertical-align: middle;
+        margin-left: 10px;
       }
       ::ng-deep .mat-button-toggle-group {
         border-color: #411e15;
@@ -239,9 +326,10 @@ table.billBaicInfoTable {
       }
       div.paymentStatus {
         flex-grow: 1;
-        width: 30%;
+        // width: 30%;
         img {
-          width: 100%;
+          // width: 100%;
+          width: 150px;
           margin-top: 10px;
           -webkit-animation-name: pulse;
           animation-name: pulse;

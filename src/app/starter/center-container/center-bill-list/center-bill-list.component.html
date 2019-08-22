@@ -117,8 +117,10 @@
   </div>
 
   <div class="col-md-5 rightPart">
-      <h5 class="mainTitle">Bill Details</h5>
-      <span class="close" (click)="closeBill()" *ngIf="billDetailsSchema.billNo">&times;</span>
+      <div class="billDetailsHeader">
+        <h5 class="mainTitle">Bill Details</h5>
+        <span class="close" (click)="closeBill()" *ngIf="billDetailsSchema.billNo">&times;</span>
+      </div>
       <div class="subContainer billDetails" *ngIf="billDetailsSchema.billNo">
         <div class="topTable">
           <table class="table billBaicInfoTable">
@@ -153,10 +155,15 @@
                 <td> : </td>
                 <td>{{billDetailsSchema.billDateTime | date : 'EEE, MMMM dd, yyyy | hh:mm a'}}</td>
               </tr>
-              <tr>
+              <tr *ngIf="billDetailsSchema.billClearDate">
                 <td>Bill Clear Date</td>
                 <td> : </td>
                 <td>{{billDetailsSchema.billClearDate | date : 'EEE, MMMM dd, yyyy | hh:mm a'}}</td>
+              </tr>
+              <tr *ngIf="billDetailsSchema.clearedBy">
+                <td>Bill Cleared By</td>
+                <td> : </td>
+                <td>{{billDetailsSchema.clearedBy}}</td>
               </tr>
             </tbody>
           </table>
@@ -206,60 +213,83 @@
             <tr>
               <td>Grand Total</td>
               <td> : </td>
-              <td class="highlightField" [ngClass]="billDetailsSchema.pendingPayment > 0 ? 'danger' : 'good'">{{billDetailsSchema.billDiscountedTotal | currency : 'INR'}}</td>
+              <td>{{billDetailsSchema.billDiscountedTotal | currency : 'INR'}}</td>
             </tr>
-            <tr>
+            <!-- <tr>
               <td>Advacned Payment</td>
               <td> : </td>
               <td>{{billDetailsSchema.advancePayment | currency : 'INR'}}
                 <img src="../../../../assets/images/{{billDetailsSchema.aPaymentType}}.png" alt="{{billDetailsSchema.aPaymentType}}" matTooltip="Paid through {{billDetailsSchema.aPaymentType}}">
               </td>
-            </tr>
+            </tr> -->
             <tr>
               <td>Pending Payment</td>
               <td> : </td>
               <td class="highlightField" [ngClass]="billDetailsSchema.pendingPayment > 0 ? 'danger' : 'good'">
                 {{billDetailsSchema.pendingPayment | currency : 'INR'}}
-                <img *ngIf="billDetailsSchema.pPaymentType !== null" src="../../../../assets/images/{{billDetailsSchema.pPaymentType}}.png" alt="{{billDetailsSchema.pPaymentType}}" matTooltip="Paid through {{billDetailsSchema.pPaymentType}}">
+                <!-- <img *ngIf="billDetailsSchema.pPaymentType !== null" src="../../../../assets/images/{{billDetailsSchema.pPaymentType}}.png" alt="{{billDetailsSchema.pPaymentType}}" matTooltip="Paid through {{billDetailsSchema.pPaymentType}}"> -->
               </td>
             </tr>
           </tbody>
         </table>
-        <mat-accordion>
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Self aware panel
-                </mat-panel-title>
-
-              </mat-expansion-panel-header>
-              <p>I'm visible because I am open</p>
-            </mat-expansion-panel>
-          </mat-accordion>
         <div class="pendingPaymentBlock" *ngIf="billDetailsSchema.pendingPayment > 0">
           <mat-checkbox name="clearBill" ngModel #clearBillCheck="ngModel">Receive Payment</mat-checkbox>
-          <mat-button-toggle-group name="paymenttype" aria-label="Payment Type" class="paymentTypeToggleGroup" #aPaymentTypeModel="matButtonToggleGroup"
-            *ngIf="clearBillCheck.value" [(ngModel)]="pPaymentType">
-            <mat-button-toggle aria-label="paytm" value="paytm" checked matTooltip="Paytm">
-              <img src="../../../../assets/images/paytm.png" alt="paytm">
-            </mat-button-toggle>
-            <mat-button-toggle aria-label="googlepay" value="googlepay" matTooltip="Google Pay">
-                <img src="../../../../assets/images/googlepay.png" alt="googlepay">
+          <div *ngIf="clearBillCheck.value" class="d-inline">
+            <mat-form-field >
+              <input matInput placeholder="Enter amount" #newPaymentModel="ngModel" [(ngModel)]="newPayment"
+                      pattern="^[1-9]\d*$" required>
+            </mat-form-field>
+            <mat-button-toggle-group name="paymenttype" aria-label="Payment Type" class="paymentTypeToggleGroup" #aPaymentTypeModel="matButtonToggleGroup"
+             [(ngModel)]="paymentType">
+              <mat-button-toggle aria-label="paytm" value="paytm" checked matTooltip="Paytm">
+                <img src="../../../../assets/images/paytm.png" alt="paytm">
               </mat-button-toggle>
-              <mat-button-toggle aria-label="phonepe" value="phonepe" matTooltip="PhonePe">
-                <img src="../../../../assets/images/phonepe.png" alt="phonepe">
-            </mat-button-toggle>
-            <mat-button-toggle aria-label="bhim" value="bhim" matTooltip="BHIM">
-                <img src="../../../../assets/images/bhim.png" alt="bhim">
+              <mat-button-toggle aria-label="googlepay" value="googlepay" matTooltip="Google Pay">
+                  <img src="../../../../assets/images/googlepay.png" alt="googlepay">
+                </mat-button-toggle>
+                <mat-button-toggle aria-label="phonepe" value="phonepe" matTooltip="PhonePe">
+                  <img src="../../../../assets/images/phonepe.png" alt="phonepe">
               </mat-button-toggle>
-            <mat-button-toggle aria-label="cash" value="cash" matTooltip="Cash">
-                <img src="../../../../assets/images/cash.png" alt="cash">
-              </mat-button-toggle>
-          </mat-button-toggle-group>
-          <button class="receive_payment btn btn-success" mat-raised-button aria-label="receive payment" (click)="paymentReceived()" *ngIf="clearBillCheck.value">
-            Payment Received
-          </button>
+              <mat-button-toggle aria-label="bhim" value="bhim" matTooltip="BHIM">
+                  <img src="../../../../assets/images/bhim.png" alt="bhim">
+                </mat-button-toggle>
+              <mat-button-toggle aria-label="cash" value="cash" matTooltip="Cash">
+                  <img src="../../../../assets/images/cash.png" alt="cash">
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+            <button class="receive_payment btn btn-success" mat-raised-button aria-label="receive payment" (click)="paymentReceived(newPaymentModel)">
+              OK
+            </button>
+            <span class="text-danger float-right font-weight-bold" *ngIf="customError.hasError">{{customError.error}}</span>
+          </div>
         </div>
+        <div class="paymentHistoryAccord">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="panelOpenState" (closed)="panelOpenState = false" (opened)="panelOpenState = true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Payment History
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <table class="table paymentHistoryTable" *ngFor="let payment of billDetailsSchema.paymentHistory; let i = index;">
+                <tbody>
+                  <tr >
+                    <td>{{i+1}}</td>
+                    <td>{{payment.amount | currency : 'INR' : 'symbol' : '1.0-0'}}</td>
+                    <td>{{payment.date | date : 'EEE, MMMM dd, yyyy | hh:mm a'}}</td>
+                    <td>{{payment.userID}}</td>
+                    <td>
+                      <img src="../../../../assets/images/{{payment.mode}}.png"
+                            alt="{{payment.mode}}" matTooltip="Paid through {{payment.mode}}">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
 
       </div>
       <div class="subContainer" [hidden]="billDetailsSchema.billNo !== null">

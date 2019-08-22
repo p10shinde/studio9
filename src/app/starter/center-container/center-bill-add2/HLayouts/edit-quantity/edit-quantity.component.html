@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Enter quantity</h1>
+<div mat-dialog-content>
+  <form class="quantityForm" #quantityForm="ngForm">
+    <mat-form-field>
+      <input type="number" matInput name="quantity" [(ngModel)]="quantity"
+      pattern="^[1-9][0-9]*$" required #quantityInput="ngModel" (keyup)="onEnter($event, quantityForm)">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="dialog-actions">
+  <button mat-button (click)="onNoClick()" class="btn btn-danger">No Thanks</button>
+  <button mat-raised-button (click)="okClick(quantityForm)" [disabled]="!quantityForm.form.valid" class="btn btn-success">Ok</button>
+</div>

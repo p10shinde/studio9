@@ -1,0 +1,387 @@
+div.outerBill {
+  padding: 10mm;
+  width: 23cm;
+}
+div.bill{
+  width: 21cm;
+  height: 29.7cm;
+  // margin: 30mm 45mm 30mm 45mm;
+  border: 1px solid black;
+  /* change the margins as you want them to be. */
+  .myp {
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+
+  .br0 {
+    border-right: 0;
+  }
+
+  .bt0 {
+    border-top: 0;
+  }
+
+  .bb0 {
+    border-bottom: 0;
+  }
+
+  .bl0 {
+    border-left: 0;
+  }
+
+  .b0 {
+    border: 0;
+  }
+
+  div.header {
+    // border-bottom: 2px solid;
+    .center {
+      text-align: center;
+      .title {
+        margin-bottom: 0;
+      }
+    }
+    .right {
+      text-align: center;
+      top: 40px;
+    }
+  }
+
+  .col-md-* {
+    // border: 1px solid black;
+  }
+
+  div.content {
+    table {
+      width: 100.1%;
+      td, th {
+        padding: 2px;
+      }
+    }
+    .table-bordered {
+      border: 0;
+    }
+
+    .table thead th, .table-bordered td, .table-bordered th {
+      border-color: #000000 !important;
+    }
+
+  }
+}
+
+
+
+//---------------------------------
+
+.itemCount {
+  float: right;
+}
+
+.form, div.thermalBillSample {
+  padding: 20px 10px;
+  height: calc(100% - 70px);
+  width: 100%;
+  overflow-y: auto;
+  margin-top: 15px;
+  color: #fff;
+  background: #68382b;
+
+}
+
+.itemList {
+  margin-left: 50px;
+  i.add_loc, i.edit_loc {
+    font-size: 23px;
+    vertical-align: sub;
+    cursor: pointer;
+  }
+  span.itemAddress {
+    display: inline-block;
+    font-size: 12px;
+    color: #ffc107;
+    margin-left: 30px;
+  }
+}
+
+li {
+  span.close, span.urgentItem {
+      cursor: pointer;
+      color: #fff;
+  }
+}
+
+span.itemPrice {
+  float: right;
+  line-height: 1.7;
+  opacity: 0.5;
+  margin-right: 20px;
+}
+
+span.itemQuantity {
+  opacity: 1;
+  button.itemQButton {
+    height: 22px;
+    padding: 0;
+    width: 42px;
+    line-height: 1;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
+    min-width: 0 !important;
+  }
+  button.itemQPlusBtn {
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  button.itemQMinusBtn {
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 0;
+  }
+
+  input {
+    text-align: center;
+  }
+}
+
+hr.hr-mid {
+  border-top: 1px dotted;
+}
+
+hr.hr-final {
+  border-top: 2px dashed;
+}
+
+.urgentItem {
+  color: #0000;
+  font-size: 13px;
+  cursor: pointer;
+  i {
+    top: 3px;
+    position: relative;
+    font-size: 15px;
+  }
+}
+
+.urgentItemActive {
+  color: #28a745;
+}
+
+.urgentItemInactive {
+  color: #6c757d;
+}
+
+.main_container {
+  height: 100%;
+  overflow: hidden;
+
+  .leftPart, .rightPart {
+    height: 100%  ;
+  }
+}
+
+.cartItemsFinal {
+  font-weight: 700;
+  span.itemPrice {
+    opacity: 1;
+  }
+}
+
+.mainTitle {
+  display: inline-block;
+  color: #fff;
+}
+
+.submitButton, .mainButton {
+  display: inline-block;
+  float: right;
+  text-align:right;
+}
+
+.mainButton {
+  button {
+    margin-left: 20px;
+  }
+}
+
+.thermalBillSample {
+  .billControlToolbar {
+    background: transparent;
+    ::ng-deep .mat-button-toggle-group {
+      border-color: #411e15;
+    }
+    ::ng-deep .mat-button-toggle {
+      div.mat-button-toggle-label-content {
+        line-height: 31px;
+        padding: 0 12px;
+      }
+    }
+    ::ng-deep .mat-button-toggle-checked {
+      color: #fff;
+      background: #ff4081;
+    }
+
+    ::ng-deep mat-checkbox.mat-checkbox {
+      padding-right: 10px;
+      label.mat-checkbox-layout {
+        line-height: 1;
+      }
+    }
+
+    ::ng-deep .discountTypeToggleGroup {
+      margin-right: 10px;
+    }
+
+    ::ng-deep .paymentTypeToggleGroup {
+      margin-left: 10px;
+      ::ng-deep .mat-button-toggle-checked {
+        background: #e0e0e0;
+        border-bottom: 4px solid #28a745;
+      }
+
+      img {
+        width: 25px;
+      }
+    }
+
+    .warn-message {
+      display: inline-block;
+      font-size:small;
+    }
+  }
+  .layout {
+    border: 1px solid;
+    margin: auto;
+    width: 60%;
+    // width: 75mm;
+    padding: 10px;
+    height: auto;
+  }
+  hr {
+    border-style: dashed;
+    border-color: black;
+  }
+  div.singleSeparator hr {
+    margin: .16rem;
+  }
+  .header {
+    margin: auto;
+    width: 90%;
+    .logo {
+      img {
+        width: 130px;
+      }
+    }
+    .companyName {
+      font-size: 40px;
+      font-weight: 700;
+    }
+    .companyAddress {
+      font-weight: 500;
+      font-size: 18px;
+    }
+
+    .billNo {
+      font-weight: 500;
+      color: #f44336;
+    }
+
+    .flex-line {
+      display: flex;
+      .single {
+        text-align: center;
+        line-height: 1;
+      }
+    }
+
+    .flex-right {
+      flex-grow: 1;
+      text-align: right;
+      width: 50%;
+    }
+
+    .flex-left {
+      flex-grow: 1;
+      width: 50%;
+    }
+  }
+
+  .content {
+    .invoice {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 500;
+    }
+    table {
+      width: 100%;
+
+      thead {
+        border-top: 1px dashed;
+        border-bottom: 1px dashed;
+
+        th {
+          padding: 5px;
+        }
+      }
+
+      td.addItemWarning {
+        text-align: center;
+        padding: 20px !important;
+        color: #f44336;
+        font-weight: 500;
+        text-decoration: underline;
+      }
+
+      tbody {
+        tr:last-child {
+          border-bottom: 1px dashed;
+        }
+        td {
+          padding: 0 5px;
+        }
+      }
+
+      tfoot {
+        td {
+          padding: 0 5px;
+          font-weight: 500;
+          font-size: 20px;
+        }
+        td:first-child {
+          text-align: center;
+        }
+
+        tr:nth-child(2) {
+          color: #f44336;
+          td {
+            font-weight: normal;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  .footer {
+    margin: 1em 0 1em 0;
+    .thankTitle {
+      text-align: center;
+      font-weight: 500;
+    }
+  }
+
+}
+
+.verticalSeparator {
+  position: absolute;
+  display: inline-block;
+  height: 41px;
+  margin-left: 8px;
+  border-right: 2px solid #007bff;
+  margin-top: 10px;
+}
+
+::ng-deep mat-dialog-container {
+  background: #73483c !important;
+  color: #fff !important;
+}
