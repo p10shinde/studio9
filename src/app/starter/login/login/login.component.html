@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="card"></div>
+  <div class="card">
+    <form #loginForm="ngForm" (ngSubmit)="validate(loginForm)">
+      <h2 class="title">Login</h2>
+      <div class="circle"><i class="material-icons">vpn_key</i></div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col">
+              <!-- <label><mat-checkbox name="passport" ngModel #passport >Passport : </mat-checkbox></label> -->
+
+              <mat-form-field class="full-width userEmail">
+                <input type="text" name="userEmail" color="primary" matInput placeholder="Email" #userEmail="ngModel"
+                pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" ngModel required>
+              </mat-form-field>
+
+              <mat-form-field class="full-width password">
+                  <input type="password" name="password" color="primary" matInput placeholder="Password" #password="ngModel" ngModel required>
+              </mat-form-field>
+
+
+              <div class="warn-message text-danger" *ngIf="userEmail.errors && (userEmail.dirty || userEmail.touched)">
+                <div [hidden]="!userEmail.errors.required">
+                    <h6>&nbsp;Email id is mandatory</h6>
+                </div>
+                <div [hidden]="!userEmail.errors.pattern">
+                    <h6>&nbsp;Email id is not entered in proper format</h6>
+                </div>
+              </div>
+
+              <div class="warn-message text-danger" *ngIf="password.errors && (password.dirty || password.touched)">
+                  <div [hidden]="!password.errors.required">
+                      <h6>&nbsp;Password id is mandatory</h6>
+                  </div>
+                </div>
+              <div class="buttonContainer">
+                <button [disabled]="!loginForm.form.valid" mat-raised-button type="submit" color="primary">Login</button>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+
+      </div>
+    </form>
+  </div>
+</div>

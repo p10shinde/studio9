@@ -1,0 +1,22 @@
+<div class="row main_container">
+  <div class="col-md-1">
+    <img class="logo" src="../../../../assets/images/logo.png" alt="">
+  </div>
+  <div class="col-md-8">
+    <!-- <div class="app_title">STUDIO9 MANAGEMENT</div> -->
+    <div class="app_title">Sample Text</div>
+  </div>
+  <div class="col-md-3" *ngIf="loggedin">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col userStatus">
+          <img src="../../../../assets/images/user.svg" alt="user">
+          <!-- <a href="">Logout</a> -->
+          <a mat-stroked-button (click)="logout()">Logout</a>
+          <span class="user">Hi, {{userFullName}}</span>
+          <!-- <button mat-stroked-button color="primary">Primary</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

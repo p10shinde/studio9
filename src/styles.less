@@ -1,1 +1,203 @@
+@import '~material-design-icons/iconfont/material-icons.css';
 /* You can add global styles to this file, and also import other style files */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+  line-height: 1;
+  background: #7e4536 !important;
+  box-sizing: border-box;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+html, body { height: 100%; }
+
+.row {
+  margin: 0 !important;
+  .myCol {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: .5em;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #421f16;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #361a12;
+}
+
+.btn  {
+  color: #fff !important;
+}
+
+.mat-input-element {
+  caret-color: #fff;
+}
+
+.material-icons {
+  color: #6bd5d9;
+}
+
+
+/////////////SELECT ////////////////////
+.mat-form-field-infix {
+  .mat-select-value {
+    color: darkgray !important;
+  }
+}
+
+.mat-select-arrow {
+  color: #ffc107;
+}
+
+.mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+  color: #ffc107;
+}
+
+.mat-select-panel .mat-option.mat-selected:not(.mat-option-multiple){
+  color: #ffc107;
+}
+
+.mat-option.mat-active {
+  color: #ffc107;
+}
+
+.mat-select-panel {
+  background: #552f25;
+}
+
+.mat-option {
+  color: #fff;
+}
+////////////////////////////////////////
+
+///////////////CHECKBOX///////////////
+.mat-checkbox-label {
+  color: #fff;
+}
+////////////////////////////////////////
+////////////////INPUT//////////////////
+.mat-form-field, .mat-form-field-infix{
+  .mat-input-element {
+    color: darkgray !important;
+  }
+
+  .mat-form-field-label {
+    color: darkgray !important;
+  }
+  .mat-form-field-underline {
+    background-color: darkgray !important;
+  }
+  .mat-form-field-ripple {
+    background-color: darkgray !important;
+  }
+  // .mat-form-field-required-marker {
+    // background-color: darkgray !important;
+  // }
+  // FOR datepicker
+  .mat-button-wrapper {
+    color: #ffc107 !important;
+  }
+}
+
+.mat-form-field.mat-focused {
+  .mat-form-field-label {
+    color: #ffc107 !important;
+  }
+  .mat-form-field-ripple {
+    background-color: #ffc107 !important;
+  }
+  .mat-form-field-required-marker {
+    // background-color: #ff884d !important;
+  }
+  .mat-input-element {
+    color: #ffc107 !important;
+  }
+}
+
+.mat-form-field.mat-form-field-invalid {
+  .mat-input-element {
+    color: #dc3545 !important;
+  }
+  .mat-form-field-label {
+    color: #dc3545 !important;
+    .mat-form-field-required-marker {
+      color: #dc3545 !important;
+    }
+  }
+  .mat-form-field-ripple {
+    background-color: #dc3545 !important;
+  }
+}
+
+
+// REMOVE SPINNER FOR INPUT TYPE NUMBER //
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+button {
+  outline: none !important;
+}
+
+.btn-normal {
+  background: #834bff !important;
+}
+
+.mat-form-field.itemQuantitySpecial {
+  .mat-form-field-infix {
+    padding: .1em 0 !important;
+    border-top: 0 !important;
+  }
+  width: 50px !important;
+}

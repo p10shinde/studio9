@@ -1,0 +1,57 @@
+<h1 mat-dialog-title>Event Address</h1>
+<div mat-dialog-content>
+  <form class="addressForm" #addressForm="ngForm">
+      <div class="form-group">
+          <mat-form-field>
+            <input matInput name="street" placeholder="Street/Place"
+            [(ngModel)]="addressModel.street" required #street="ngModel" pattern="^[^,]+$">
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput name="landmark" placeholder="Landmark" [(ngModel)]="addressModel.landmark" required #landmark="ngModel" pattern="^[^,]+$">
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>City</mat-label>
+            <mat-select name="city" [(ngModel)]="addressModel.city" required  #city="ngModel">
+              <mat-option *ngFor="let city of cities" [value]="city">
+                {{city}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input type="number" matInput name="postalCode" placeholder="Postal Code" [(ngModel)]="addressModel.postalCode"
+            pattern="^[1-9][0-9]{5}$" required #postalCode="ngModel">
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>State</mat-label>
+            <mat-select name="state" [(ngModel)]="addressModel.state" required #state="ngModel">
+              <mat-option *ngFor="let state of states" [value]="state">
+                {{state}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Country</mat-label>
+            <mat-select name="country" [(ngModel)]="addressModel.country" required #country="ngModel">
+              <mat-option *ngFor="let country of countries" [value]="country">
+                {{country}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="warn-message" *ngIf="street.errors || landmark.errors">
+            <span class="errorText text-danger" *ngIf="(street.errors && street.errors['pattern']) || (landmark.errors && landmark.errors['pattern']) ">
+              Please do not include comma [,] in the address.</span>
+          </div>
+          <!-- <button mat-raised-button type="button" (click)="test(city)">Test</button> -->
+          <!-- <button mat-raised-button type="submit">Add</button> -->
+      </div>
+  </form>
+</div>
+<div mat-dialog-actions class="dialog-actions">
+  <button mat-button (click)="onNoClick(addressForm)" class="btn btn-danger">No Thanks</button>
+  <button mat-raised-button (click)="okClick(addressForm)" [disabled]="!addressForm.form.valid" class="btn btn-success">Ok</button>
+</div>

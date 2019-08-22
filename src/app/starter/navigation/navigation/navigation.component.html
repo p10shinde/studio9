@@ -1,0 +1,69 @@
+<!-- <div class="wrapper"> -->
+    <!-- Sidebar -->
+    <nav id="sidebar" [ngClass]="{'active':sidebarFlag}">
+        <div id="content">
+          <!-- <button type="button" id="sidebarCollapse" class="btn" (click)="toggleSideBar()">
+              <i class="fa fa-bars"></i>
+          </button> -->
+        </div>
+        <!-- <div class="sidebar-header">
+            <h3>Bootstrap Sidebar</h3>
+        </div> -->
+
+        <!-- <ul class="list-unstyled components">
+            <li  class="active">
+                <a href="#homeSubmenu"   data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" (click)="showSubMenu()">
+                    <i class="fa fa-home"></i><div class="title"> Bill</div></a>
+                <ul  class="collapse list-unstyled" id="homeSubmenu">
+                    <li>
+                        <a href="#">List</a>
+                    </li>
+                    <li>
+                        <a href="#">Add New</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-home"></i><div class="title"> Report</div></a>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-home"></i><div class="title"> Calendar</div></a>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-home"></i><div class="title"> Services</div></a>
+            </li>
+        </ul> -->
+
+        <!-- <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon>dialpad</mat-icon>
+            <span>Redial</span>
+          </button>
+          <button mat-menu-item disabled>
+            <mat-icon>voicemail</mat-icon>
+            <span>Check voicemail</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>notifications_off</mat-icon>
+            <span>Disable alerts</span>
+          </button>
+        </mat-menu> -->
+
+        <div class="components">
+          <button  [ngClass]="{'active':isBillRoute}"  mat-button [matMenuTriggerFor]="afterMenu">
+            <mat-icon>payment</mat-icon>Bill
+            <mat-icon class="submenu_arrow">keyboard_arrow_right</mat-icon></button>
+          <mat-menu #afterMenu="matMenu" xPosition="after">
+            <button routerLinkActive="active" routerLink="/bill/list/all" #rla="routerLinkActive" mat-menu-item>List</button>
+            <button routerLinkActive="active" routerLink="/bill/add" #rla="routerLinkActive" mat-menu-item>Add</button>
+          </mat-menu>
+          <button mat-button routerLink="/customers/manage" routerLinkActive="active"><mat-icon>perm_contact_calendar</mat-icon>Customers</button>
+          <button mat-button routerLink="/report/dashboard" routerLinkActive="active"><mat-icon>dashboard</mat-icon>Report</button>
+          <button mat-button routerLink="/calendar" routerLinkActive="active"><mat-icon>timeline</mat-icon>Calendar</button>
+          <button mat-button routerLink="/serviecs" routerLinkActive="active"><mat-icon>public</mat-icon>Services</button>
+        </div>
+    </nav>
+
+
+
+<!-- </div> -->

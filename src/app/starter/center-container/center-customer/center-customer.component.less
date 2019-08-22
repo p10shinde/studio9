@@ -1,0 +1,199 @@
+table {
+  background: #7e4536;
+  box-shadow: none;
+  border-collapse: collapse;
+}
+table th {
+  vertical-align: middle;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fbdb6a;
+  font-family: cursive;
+  background: #68382b;
+  border: 0;
+}
+
+table td {
+  border: 0;
+  color: #fff;
+}
+::ng-deep table.listTable {
+  width: 100%;
+  th {
+    text-align: center;
+  }
+
+  td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  th:first-child {
+    width: 20px;
+  }
+
+  tbody {
+    background: #3b39393d;
+  }
+}
+
+.listTable {
+  th:last-child {
+    width: 40%;
+  }
+}
+
+.main_container {
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+
+  .leftPart, .rightPart {
+    height: 100%;
+    padding: 0;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .leftPart {
+    .listHeader {
+      display: flex;
+      .filter_table_clear_button {
+        margin: 4px 4px 0 15px;
+        width: 30px;
+        height: 30px;
+        outline: none;
+        background: #d50000;
+        ::ng-deep .mat-button-wrapper {
+          padding: 0;
+        }
+        mat-icon {
+          color: #fff;
+        }
+        .material-icons {
+          font-size: 17px;
+        }
+      }
+      .listToolBar {
+        display: flex;
+        flex-grow: 1;
+        flex-flow: row-reverse;
+      }
+      mat-form-field {
+        font-size: 13px;
+        margin: 0px 10px;
+      }
+    }
+  }
+
+  .rightPart {
+    padding-left: 10px;
+    .submitButton, .mainButton {
+      display: inline-block;
+      float: right;
+      text-align:right;
+    }
+
+    .listItemDetails {
+      padding-top: 15px;
+    }
+
+    .mainButton {
+      button {
+        margin-left: 20px;
+      }
+    }
+    .close {
+      cursor: pointer;
+      color: #fff;
+      padding-right: 10px;
+      font-size: 30px;
+    }
+    .subContainer {
+      form {
+        .flex-line {
+          display: flex;
+          .mat-form-field {
+            flex-grow: 1;
+            button {
+              top: 8px;
+              ::ng-deep span.mat-button-wrapper {
+                color: #fff !important;
+              }
+            }
+          }
+          .mat-form-field:nth-child(2n) {
+            padding-left: 20px;
+          }
+          .one-part {
+            width: 25%;
+          }
+
+          .three-part {
+            width: 75%;
+          }
+
+          .one-part-half {
+            width: 10%;
+          }
+
+          .one-part-full {
+            width: 90%;
+          }
+        }
+      }
+    }
+  }
+
+  .subContainer {
+    height: calc(100% - 52px);
+    width: 100%;
+    overflow-y: auto;
+    img.empty_image {
+      width: 80%;
+      margin: auto;
+      display: block;
+      position: relative;
+      margin-top: 15%;
+      box-shadow: 0px 0px 43px 5px #421f16;
+    }
+
+    .empty_text {
+      color:#fff;
+      text-align: center;
+      padding: 30px;
+      font-family: cursive;
+    }
+
+    .empty_list {
+      .empty_image {
+        width: 50%;
+        margin-top: 5%;
+      }
+    }
+  }
+}
+
+.mainTitle {
+  color: #fff;
+  display: inline-block;
+}
+
+tr.mat-footer-row {
+  font-weight: bold;
+}
+
+hr {
+  border-top: 2px solid #421f16;
+}
+
+.custActive {
+  // background: #28a7454d;
+  // border-bottom: 4px solid #28a745;
+  // border-top: 4px solid #28a745;
+
+  background: linear-gradient(90deg, #28a745c4 0%, transparent 25%),linear-gradient(270deg, #28a745c4 0%, transparent 25%);
+  border-bottom: 4px solid #28a745;
+}
+
+

@@ -1,0 +1,310 @@
+table {
+  background: #7e4536;
+  box-shadow: none;
+  border-collapse: collapse;
+}
+table th {
+  vertical-align: middle;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fbdb6a;
+  font-family: cursive;
+  background: #68382b;
+  border: 0;
+}
+
+table {
+  td.highlightField {
+    display: inline-block;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    background: #68382b;
+    color: #fff;
+    border-radius: 4px;
+    border: 2px solid;;
+  }
+
+  td.highlightField.danger {
+    border-color: #dc3545!important;
+  }
+  td.highlightField.good {
+    border-color: #28a745 !important;
+  }
+}
+
+table td {
+  border: 0;
+  color: #fff;
+}
+::ng-deep table.billListTable {
+  width: 100%;
+  th {
+    text-align: center;
+  }
+
+  td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  th:first-child {
+    width: 20px;
+  }
+
+  tbody {
+    background: #3b39393d;
+  }
+}
+
+table.billBaicInfoTable {
+  tbody {
+    td {
+      text-align: left;
+      padding: 2px;
+      font-weight: 500;
+      img {
+        width: 40px;
+        height: 35px;
+      }
+    }
+
+    tr td:first-child {
+      width: 160px;
+      font-weight: 700;
+      color: #fbdb6a;
+    }
+
+    tr td:nth-child(2n) {
+      width: 10px;
+    }
+
+  }
+}
+
+::ng-deep table.billDetailsTable {
+  width: 100%;
+  th {
+    font-size: 13px;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+
+  th:first-child {
+    width: 8%;
+  }
+
+  th:last-child {
+    width: 12%;
+  }
+
+  th:nth-child(2), th:nth-child(3) {
+    width: 40%;
+  }
+
+  tbody {
+    background: #3b39393d;
+  }
+}
+
+.main_container {
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+
+  .leftPart, .rightPart {
+    height: 100%;
+    padding: 0;
+  }
+
+  .leftPart {
+    .billListHeader {
+      display: flex;
+      .filter_table_clear_button {
+        margin: 4px 4px 0 15px;
+        width: 30px;
+        height: 30px;
+        outline: none;
+        background: #d50000;
+        ::ng-deep .mat-button-wrapper {
+          padding: 0;
+        }
+        mat-icon {
+          color: #fff;
+        }
+        .material-icons {
+          font-size: 17px;
+        }
+      }
+      .billListToolBar {
+        display: flex;
+        flex-grow: 1;
+        flex-flow: row-reverse;
+      }
+      mat-form-field {
+        font-size: 13px;
+        margin: 0px 10px;
+      }
+    }
+
+
+
+  }
+
+  .rightPart {
+    padding-left: 10px;
+    .close {
+      cursor: pointer;
+      color: #fff;
+      font-size: 30px;
+      padding-right: 10px;
+    }
+  }
+
+  .subContainer {
+    height: calc(100% - 52px);
+    width: 100%;
+    overflow-y: auto;
+    padding-right: 10px;
+    padding-left: 10px;
+    img.empty_image {
+      width: 80%;
+      margin: auto;
+      display: block;
+      position: relative;
+      margin-top: 15%;
+      box-shadow: 0px 0px 43px 5px #421f16;
+    }
+
+    .empty_text {
+      color:#fff;
+      text-align: center;
+      padding: 30px;
+      font-family: cursive;
+    }
+
+    .empty_list {
+      .empty_image {
+        width: 50%;
+        margin-top: 5%;
+      }
+    }
+    div.pendingPaymentBlock {
+      button.receive_payment {
+        float: right;
+      }
+      ::ng-deep .mat-button-toggle-group {
+        border-color: #411e15;
+      }
+      ::ng-deep .mat-button-toggle {
+        div.mat-button-toggle-label-content {
+          line-height: 31px;
+          padding: 0 12px;
+        }
+      }
+      ::ng-deep .mat-button-toggle-checked {
+        color: #fff;
+        background: #ff4081;
+      }
+
+      ::ng-deep mat-checkbox.mat-checkbox {
+        padding-right: 10px;
+        label.mat-checkbox-layout {
+          line-height: 1;
+        }
+      }
+
+      ::ng-deep .discountTypeToggleGroup {
+        margin-right: 10px;
+      }
+
+      ::ng-deep .paymentTypeToggleGroup {
+        margin-left: 10px;
+        ::ng-deep .mat-button-toggle-checked {
+          background: #e0e0e0;
+          border-bottom: 4px solid #28a745;
+        }
+        img {
+          width: 25px;
+        }
+      }
+    }
+
+    div.topTable {
+      display: flex;
+      table {
+        flex-grow: 1;
+        width: 70%;
+      }
+      div.paymentStatus {
+        flex-grow: 1;
+        width: 30%;
+        img {
+          width: 100%;
+          margin-top: 10px;
+          -webkit-animation-name: pulse;
+          animation-name: pulse;
+          -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+          -webkit-animation-fill-mode:forwards;
+          animation-fill-mode:forwards;
+        }
+      }
+    }
+  }
+}
+
+.mainTitle {
+  color: #fff;
+  display: flex;
+}
+
+tr.mat-footer-row {
+  font-weight: bold;
+}
+
+hr {
+  border-top: 2px solid #421f16;
+}
+
+.billActive {
+  // background: #28a7454d;
+  // border-bottom: 4px solid #28a745;
+  // border-top: 4px solid #28a745;
+
+  background: linear-gradient(90deg, #28a745c4 0%, transparent 25%),linear-gradient(270deg, #28a745c4 0%, transparent 25%);
+  border-bottom: 4px solid #28a745;
+}
+
+
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+@-webkit-keyframes pulse{
+  0%{
+    opacity: 0;
+  }
+  10%{
+    opacity:.50;
+    transform-origin: 50% 50%;
+    transform: rotate(-2deg) scale(5);
+    transition: all .3s cubic-bezier(0.6, 0.04, 0.98, 0.335);
+  }
+  100%{
+    opacity:1;
+    transform: rotate(-8deg) scale(1);
+  }
+}

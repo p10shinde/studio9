@@ -1,0 +1,270 @@
+<div class="row main_container">
+  <div class="col-md-7 leftPart">
+    <div class="billListHeader">
+
+      <h5 class="mainTitle">Bill List ({{dataSource.filteredData.length}})</h5>
+      <div class="billListToolBar" >
+        <mat-form-field>
+          <mat-label>Filter By</mat-label>
+          <mat-select ngModel #filterCategory="ngModel" (selectionChange)="filterCategoryListener(filterCategory.value)">
+            <mat-option *ngFor="let filter of filterByCategories; let i" [value]="filter">
+              {{filter}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- billNo search -->
+        <mat-form-field *ngIf="activeFilterType === fMetadata[0].type">
+          <input matInput placeholder="Enter bill no" ngModel #billNoFilter="ngModel" (keyup)="filterTable(billNoFilter)">
+        </mat-form-field>
+
+        <!-- billDateTime search -->
+        <mat-form-field *ngIf="activeFilterType === fMetadata[1].type">
+          <input matInput [matDatepicker]="picker" [max]="maxDate" placeholder="Choose a date" ngModel #billDateTimeFilter="ngModel"
+            (dateChange)="filterTable(billDateTimeFilter)" disabled>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker disabled="false"></mat-datepicker>
+        </mat-form-field>
+
+        <!-- custName search -->
+        <mat-form-field *ngIf="activeFilterType === fMetadata[2].type">
+          <input matInput placeholder="Enter customer name" ngModel #custNameFilter="ngModel" (keyup)="filterTable(custNameFilter)">
+        </mat-form-field>
+
+        <!-- custContact search -->
+        <mat-form-field *ngIf="activeFilterType === fMetadata[3].type">
+          <input matInput placeholder="Enter customer contact" ngModel #custContact="ngModel" (keyup)="filterTable(custContact)">
+        </mat-form-field>
+
+        <!-- pendingPayment search -->
+        <mat-form-field *ngIf="activeFilterType === fMetadata[4].type">
+          <input matInput placeholder="Enter amount" ngModel #pendingPayment="ngModel" (keyup)="filterTableCustom()">
+        </mat-form-field>
+        <mat-form-field *ngIf="activeFilterType === fMetadata[4].type">
+          <mat-label>Select query</mat-label>
+          <mat-select  [(ngModel)]="selectedFilter" #pendingPaymentQuery="ngModel" (selectionChange)="filterTableCustom()">
+            <mat-option *ngFor="let filter of pendingPaymentQueryCategories; let i" [value]="filter">
+              {{filter}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- userFullName search -->
+        <mat-form-field *ngIf="activeFilterType === fMetadata[5].type">
+            <input matInput placeholder="Enter user name" ngModel #userFullName="ngModel" (keyup)="filterTable(userFullName)">
+          </mat-form-field>
+      </div>
+      <button class="filter_table_clear_button" mat-fab aria-label="Search" (click)="filterTable({value:'', control: { value: ''}}, filterCategory)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="subContainer">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 billListTable" id="mattable1">
+        <ng-container matColumnDef="billNo">
+          <th mat-header-cell *matHeaderCellDef> {{billListTableColumnsTitles[0]}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.billNo}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="billDateTime">
+          <th mat-header-cell *matHeaderCellDef> {{billListTableColumnsTitles[1]}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.billDateTime | date : 'mediumDate'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="custName">
+          <th mat-header-cell *matHeaderCellDef> {{billListTableColumnsTitles[2]}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.custName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="custContact">
+          <th mat-header-cell *matHeaderCellDef> {{billListTableColumnsTitles[3]}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.custContact}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="billTotal">
+          <th mat-header-cell *matHeaderCellDef> {{billListTableColumnsTitles[4]}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.billTotal | currency : 'INR' : 'symbol' : '1.0-0'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="discountAmount">
+          <th mat-header-cell *matHeaderCellDef> {{billListTableColumnsTitles[5]}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.discountAmount}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="billDiscountedTotal">
+          <th mat-header-cell *matHeaderCellDef> {{billListTableColumnsTitles[6]}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.billDiscountedTotal | currency : 'INR' : 'symbol' : '1.0-0'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="pendingPayment">
+          <th mat-header-cell *matHeaderCellDef> {{billListTableColumnsTitles[7]}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.pendingPayment | currency : 'INR' : 'symbol' : '1.0-0'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="userFullName">
+          <th mat-header-cell *matHeaderCellDef> {{billListTableColumnsTitles[8]}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.userFullName}} </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="billListTableColumns;sticky:true"></tr>
+        <tr mat-row *matRowDef="let row; columns: billListTableColumns" name="billRow" ngDefaultControl
+            ngModel #billRow="ngModel" (click)="showDetails(row)" [ngClass]="row.billNo === activeBillNo ? 'billActive' : ''"></tr>
+      </table>
+      <div class="empty_list" [hidden]="dataSource.filteredData.length > 0">
+        <img class="empty_image" src="assets\images\no-record-found.png" alt="no record found">
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5 rightPart">
+      <h5 class="mainTitle">Bill Details</h5>
+      <span class="close" (click)="closeBill()" *ngIf="billDetailsSchema.billNo">&times;</span>
+      <div class="subContainer billDetails" *ngIf="billDetailsSchema.billNo">
+        <div class="topTable">
+          <table class="table billBaicInfoTable">
+            <tbody>
+              <tr>
+                <td>Bill No</td>
+                <td> : </td>
+                <td>{{billDetailsSchema.billNo}}</td>
+              </tr>
+              <tr>
+                <td>Customer Name</td>
+                <td> : </td>
+                <td>{{billDetailsSchema.custName }}({{billDetailsSchema.custID}})</td>
+              </tr>
+              <tr>
+                <td>Customer Contact</td>
+                <td> : </td>
+                <td>{{billDetailsSchema.custContact}}</td>
+              </tr>
+              <tr>
+                <td>User Name</td>
+                <td> : </td>
+                <td>{{billDetailsSchema.userFullName }}({{billDetailsSchema.userID}})</td>
+              </tr>
+              <tr>
+                <td>User Contact</td>
+                <td> : </td>
+                <td>{{billDetailsSchema.userContact}}</td>
+              </tr>
+              <tr>
+                <td>Bill Date</td>
+                <td> : </td>
+                <td>{{billDetailsSchema.billDateTime | date : 'EEE, MMMM dd, yyyy | hh:mm a'}}</td>
+              </tr>
+              <tr>
+                <td>Bill Clear Date</td>
+                <td> : </td>
+                <td>{{billDetailsSchema.billClearDate | date : 'EEE, MMMM dd, yyyy | hh:mm a'}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="paymentStatus">
+            <img src="../../../../assets/images/approved.png" alt="" *ngIf="billDetailsSchema.pendingPayment === 0">
+          </div>
+        </div>
+        <hr>
+        <table mat-table [dataSource]="billDetailsSchema.billDetails" class="mat-elevation-z8 billDetailsTable">
+          <ng-container matColumnDef="sr">
+            <th mat-header-cell *matHeaderCellDef> # </th>
+            <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Item </th>
+            <td mat-cell *matCellDef="let element"> {{element.descr}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef> Address </th>
+            <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Price </th>
+            <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="billDetailsTableColumns;sticky:true"></tr>
+          <tr mat-row *matRowDef="let row; columns: billDetailsTableColumns;"></tr>
+        </table>
+        <hr>
+        <table class="table billBaicInfoTable">
+          <tbody>
+            <tr>
+              <td>Total</td>
+              <td> : </td>
+              <td>{{billDetailsSchema.billTotal | currency : 'INR'}}</td>
+            </tr>
+            <tr>
+              <td>Discount</td>
+              <td> : </td>
+              <td>{{billDetailsSchema.discountAmount}} ({{billDetailsSchema.billTotal - billDetailsSchema.billDiscountedTotal | currency : 'INR'}})</td>
+            </tr>
+            <tr>
+              <td>Grand Total</td>
+              <td> : </td>
+              <td class="highlightField" [ngClass]="billDetailsSchema.pendingPayment > 0 ? 'danger' : 'good'">{{billDetailsSchema.billDiscountedTotal | currency : 'INR'}}</td>
+            </tr>
+            <tr>
+              <td>Advacned Payment</td>
+              <td> : </td>
+              <td>{{billDetailsSchema.advancePayment | currency : 'INR'}}
+                <img src="../../../../assets/images/{{billDetailsSchema.aPaymentType}}.png" alt="{{billDetailsSchema.aPaymentType}}" matTooltip="Paid through {{billDetailsSchema.aPaymentType}}">
+              </td>
+            </tr>
+            <tr>
+              <td>Pending Payment</td>
+              <td> : </td>
+              <td class="highlightField" [ngClass]="billDetailsSchema.pendingPayment > 0 ? 'danger' : 'good'">
+                {{billDetailsSchema.pendingPayment | currency : 'INR'}}
+                <img *ngIf="billDetailsSchema.pPaymentType !== null" src="../../../../assets/images/{{billDetailsSchema.pPaymentType}}.png" alt="{{billDetailsSchema.pPaymentType}}" matTooltip="Paid through {{billDetailsSchema.pPaymentType}}">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Self aware panel
+                </mat-panel-title>
+
+              </mat-expansion-panel-header>
+              <p>I'm visible because I am open</p>
+            </mat-expansion-panel>
+          </mat-accordion>
+        <div class="pendingPaymentBlock" *ngIf="billDetailsSchema.pendingPayment > 0">
+          <mat-checkbox name="clearBill" ngModel #clearBillCheck="ngModel">Receive Payment</mat-checkbox>
+          <mat-button-toggle-group name="paymenttype" aria-label="Payment Type" class="paymentTypeToggleGroup" #aPaymentTypeModel="matButtonToggleGroup"
+            *ngIf="clearBillCheck.value" [(ngModel)]="pPaymentType">
+            <mat-button-toggle aria-label="paytm" value="paytm" checked matTooltip="Paytm">
+              <img src="../../../../assets/images/paytm.png" alt="paytm">
+            </mat-button-toggle>
+            <mat-button-toggle aria-label="googlepay" value="googlepay" matTooltip="Google Pay">
+                <img src="../../../../assets/images/googlepay.png" alt="googlepay">
+              </mat-button-toggle>
+              <mat-button-toggle aria-label="phonepe" value="phonepe" matTooltip="PhonePe">
+                <img src="../../../../assets/images/phonepe.png" alt="phonepe">
+            </mat-button-toggle>
+            <mat-button-toggle aria-label="bhim" value="bhim" matTooltip="BHIM">
+                <img src="../../../../assets/images/bhim.png" alt="bhim">
+              </mat-button-toggle>
+            <mat-button-toggle aria-label="cash" value="cash" matTooltip="Cash">
+                <img src="../../../../assets/images/cash.png" alt="cash">
+              </mat-button-toggle>
+          </mat-button-toggle-group>
+          <button class="receive_payment btn btn-success" mat-raised-button aria-label="receive payment" (click)="paymentReceived()" *ngIf="clearBillCheck.value">
+            Payment Received
+          </button>
+        </div>
+
+      </div>
+      <div class="subContainer" [hidden]="billDetailsSchema.billNo !== null">
+        <img class="empty_image" src="assets\images\empty.jpg" alt="empty_image">
+        <h3 class="empty_text">Please select bill from left to view details.</h3>
+      </div>
+  </div>
+</div>
