@@ -5,14 +5,16 @@ import { CenterBillListComponent } from './center-bill-list/center-bill-list.com
 import { CenterBillAddComponent } from './center-bill-add/center-bill-add.component';
 import { CenterCustomerComponent } from './center-customer/center-customer.component';
 import { CenterBillAdd2Component } from './center-bill-add2/center-bill-add2.component';
+import { CenterUserComponent } from './center-user/center-user.component';
 
 
 const routes: Routes = [
   { path: '', redirectTo: '/report/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: CenterReportComponent },
-  { path: 'list/:billNo', component: CenterBillListComponent },
+  { path: 'list', component: CenterBillListComponent },
   { path: 'add', component: CenterBillAdd2Component },
-  { path: 'manage', component: CenterCustomerComponent }
+  { path: 'manage', component: CenterCustomerComponent },
+  { path: 'modify', component: CenterUserComponent }
 ];
 
 @NgModule({

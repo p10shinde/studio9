@@ -24,11 +24,14 @@ import { PreweddingComponent } from './center-bill-add/HLayouts/prewedding/prewe
 import { WeddingComponent } from './center-bill-add/HLayouts/wedding/wedding.component';
 import { BirthdayComponent } from './center-bill-add/HLayouts/birthday/birthday.component';
 import { CustomComponent } from './center-bill-add/HLayouts/custom/custom.component';
-import { EditAddressComponent } from './center-bill-add/HLayouts/edit-address/edit-address.component';
+import { EditAddressComponent } from './center-bill-add2/HLayouts/edit-address/edit-address.component';
 import { DetailsActiveRowDirective } from './center-bill-list/details-active-row.directive';
 import { CenterCustomerComponent } from './center-customer/center-customer.component';
-import { EditQuantityComponent } from './center-bill-add/HLayouts/edit-quantity/edit-quantity.component';
+import { EditQuantityComponent } from './center-bill-add2/HLayouts/edit-quantity/edit-quantity.component';
 import { CenterBillAdd2Component } from './center-bill-add2/center-bill-add2.component';
+import { DynamicDialogComponent } from './center-bill-add2/HLayouts/dynamic-dialog/dynamic-dialog.component';
+import { AddressTransformPipe } from '../pipes/address-transform.pipe';
+import { CenterUserComponent } from './center-user/center-user.component';
 
 
 @NgModule({
@@ -37,7 +40,11 @@ import { CenterBillAdd2Component } from './center-bill-add2/center-bill-add2.com
                   CustomComponent, EditAddressComponent, DetailsActiveRowDirective,
                   CenterCustomerComponent,
                   EditQuantityComponent,
-                  CenterBillAdd2Component],
+                  CenterBillAdd2Component,
+                  DynamicDialogComponent,
+                  AddressTransformPipe,
+                  CenterUserComponent
+                ],
   imports: [
     CommonModule,
     CenterContainerRoutingModule,
@@ -68,7 +75,9 @@ import { CenterBillAdd2Component } from './center-bill-add2/center-bill-add2.com
     CustomComponent,
     EditAddressComponent,
     EditQuantityComponent,
-    CenterBillAdd2Component
+    CenterBillAdd2Component,
+    DynamicDialogComponent,
+    CenterUserComponent
   ],
   exports: [ CenterBillListComponent ]
 })

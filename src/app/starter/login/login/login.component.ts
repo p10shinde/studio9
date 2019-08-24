@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
 
   validate(formData: NgForm) {
     const resp = this.userService.validateUser({userEmail: formData.value.userEmail, password: formData.value.password,
+                                  passwordT: formData.value.password,
                                   userFullName: null, type: null, userID: null, userContact: null});
 
     resp.subscribe(user => {

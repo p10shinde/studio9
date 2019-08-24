@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { NgForm, FormControl } from '@angular/forms';
 import { OrderAddress } from '../../Datastructures/OrderAddress';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import * as _ from 'underscore';
 
 @Component({
   selector: 'app-edit-address',
@@ -31,17 +32,18 @@ export class EditAddressComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.inputData);
-    if (this.inputData) {
-      const addressData = this.inputData.split(', ');
-      this.addressModel = {
-        street: addressData[0],
-        landmark: addressData[1],
-        city: addressData[2],
-        postalCode: addressData[3],
-        state: addressData[4],
-        country: addressData[5],
-      };
+    // const addressData = this.inputData.split(', ');
+    if (!_.isEmpty(this.inputData)) {
+      this.addressModel = this.inputData;
     }
+    // {
+    //   street: addressData[0],
+    //   landmark: addressData[1],
+    //   city: addressData[2],
+    //   postalCode: addressData[3],
+    //   state: addressData[4],
+    //   country: addressData[5],
+    // };
   }
 
   openLink(event: MouseEvent): void {

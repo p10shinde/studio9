@@ -189,11 +189,12 @@ export class CenterCustomerComponent implements OnInit {
 
   filterTable(filter, ifClear) {
     console.log(filter);
-    this.dataSource.filterPredicate = this.fMetadata.filter(obj2 => obj2.type === this.activeFilterType)[0]['fn']();
-    this.dataSource.filter = typeof filter.control.value === 'object' ?
-                              filter.control.value.toString().trim().toLowerCase() :
-                              filter.control.value.trim().toLowerCase();
-
+    if (this.activeFilterType) {
+      this.dataSource.filterPredicate = this.fMetadata.filter(obj2 => obj2.type === this.activeFilterType)[0].fn();
+      this.dataSource.filter = typeof filter.control.value === 'object' ?
+                                filter.control.value.toString().trim().toLowerCase() :
+                                filter.control.value.trim().toLowerCase();
+    }
     if (ifClear) {
       ifClear.control.setValue(null);
       this.activeFilterType = null;
@@ -230,7 +231,7 @@ export class CenterCustomerComponent implements OnInit {
     } else {
       this.custService.modifyCustomer(this.customerModel)
         .subscribe(custDetails => {
-            this.snackbarService.open(`Customer detials updated successfully`, 'success');
+            this.snackbarService.open(`Customer details updated successfully`, 'success');
             this.toggleForm(formData, 'disable');
             this.custService.callWhenCustomerModified(custDetails);
         },

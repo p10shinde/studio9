@@ -54,13 +54,14 @@
             <mat-icon>payment</mat-icon>Bill
             <mat-icon class="submenu_arrow">keyboard_arrow_right</mat-icon></button>
           <mat-menu #afterMenu="matMenu" xPosition="after">
-            <button routerLinkActive="active" routerLink="/bill/list/all" #rla="routerLinkActive" mat-menu-item>List</button>
+            <button routerLinkActive="active" routerLink="/bill/list" #rla="routerLinkActive" mat-menu-item>List</button>
             <button routerLinkActive="active" routerLink="/bill/add" #rla="routerLinkActive" mat-menu-item>Add</button>
           </mat-menu>
           <button mat-button routerLink="/customers/manage" routerLinkActive="active"><mat-icon>perm_contact_calendar</mat-icon>Customers</button>
           <button mat-button routerLink="/report/dashboard" routerLinkActive="active"><mat-icon>dashboard</mat-icon>Report</button>
-          <button mat-button routerLink="/calendar" routerLinkActive="active"><mat-icon>timeline</mat-icon>Calendar</button>
-          <button mat-button routerLink="/serviecs" routerLinkActive="active"><mat-icon>public</mat-icon>Services</button>
+          <button *ngIf="ifAdmin" mat-button routerLink="/users/modify" routerLinkActive="active"><mat-icon>supervised_user_circle</mat-icon>Users</button>
+          <!-- <button mat-button routerLink="/calendar" routerLinkActive="active"><mat-icon>timeline</mat-icon>Calendar</button> -->
+          <!-- <button mat-button routerLink="/serviecs" routerLinkActive="active"><mat-icon>public</mat-icon>Services</button> -->
         </div>
     </nav>
 

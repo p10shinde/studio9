@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, QueryList, ViewChildren, ElementRef } from '@angular/core';
+import { Component, OnInit, NgZone, QueryList, ViewChildren, ElementRef, Pipe, PipeTransform } from '@angular/core';
 import { NgForm, NgModel, NgControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PassportComponent } from './HLayouts/passport/passport.component';
@@ -23,6 +23,10 @@ import { Bill } from './Datastructures/bill';
 import { isEmpty } from 'rxjs/operators';
 import { EditQuantityComponent } from './HLayouts/edit-quantity/edit-quantity.component';
 import { OfferingService } from '../../Services/offering.service';
+import { DynamicDialogComponent } from './HLayouts/dynamic-dialog/dynamic-dialog.component';
+import * as _ from 'underscore';
+
+
 
 
 @Component({
@@ -31,27 +35,6 @@ import { OfferingService } from '../../Services/offering.service';
   styleUrls: ['./center-bill-add2.component.less']
 })
 export class CenterBillAdd2Component implements OnInit {
-
-  quantityElOldVal = 1;
-  @ViewChildren('itemQuantity') components: QueryList<ElementRef>;
-  cartItems: Array<CartItems>;
-  cartItemsTotal = 0;
-
-  passportTotal = 0;
-  passportItemList: Array<Passport> = [];
-
-  preweddingTotal = 0;
-  preWeddingItemList: Array<Prewedding> = [];
-
-  weddingTotal = 0;
-  weddingItemList: Array<Wedding> = [];
-
-  birthdayTotal = 0;
-  birthdayItemList: Array<Birthday> = [];
-
-  customTotal = 0;
-  customItemList: Array<Custom> = [];
-  checked = false;
 
   // userFullName: string;
   loggedin = false;
@@ -94,11 +77,16 @@ export class CenterBillAdd2Component implements OnInit {
   // };
 
   offerings = [];
-  itemList = [];
+  itemListAll = [];
+  itemListTotal = 0;
+  totalQuantity = 0;
+  checkoutItems = [];
+
 
 
   constructor(private dialog: MatDialog,
               private qntyDialog: MatDialog,
+              private dynamicDialog: MatDialog,
               private userService: UserService,
               private router: Router,
               private customerService: CustomerService,
@@ -109,8 +97,6 @@ export class CenterBillAdd2Component implements OnInit {
               ) { }
 
   ngOnInit() {
-    // this.cartItems.passport = this.cartItems.prewedding =
-    // this.cartItems.wedding = this.cartItems.birthday = this.cartItems.custom = [];
     this.loggedin = this.userService.checkLoggedIn();
     this.userID = sessionStorage.getItem('userID');
     this.userFullName = sessionStorage.getItem('userFullName');
@@ -125,14 +111,6 @@ export class CenterBillAdd2Component implements OnInit {
     this.customerService.getCustomerNameList().subscribe(list => {
       this.customerNameList = list;
     });
-    // this.userFullName = sessionStorage.getItem('userFullName');
-    // this.passportItemList.forEach((item, index) => {
-    //   this.passportTotal += item.amount;
-    // });
-
-    // this.customItemList.forEach((item, index) => {
-    //   this.customTotal += item.amount;
-    // });
 
     this.zone.runOutsideAngular(() => {
       setInterval(() => {
@@ -161,190 +139,80 @@ export class CenterBillAdd2Component implements OnInit {
   }
 
   resetBill(discountCheckBox: NgModel, advancepaycheck: NgModel, customerSelect: NgModel) {
-    this.passportItemList = [];
-    this.preWeddingItemList = [];
-    this.weddingItemList = [];
-    this.birthdayItemList = [];
-
-    this.customItemList = [];
-    this.cartItems = [];
-    this.passportTotal = this.preweddingTotal = this.weddingTotal = this.birthdayTotal =
-    this.customTotal = this.cartItemsTotal = this.discountAmount = this.billDiscountedTotal =
+    this.itemListAll = [];
+    this.itemListTotal = this.discountAmount = this.billDiscountedTotal =
     this.advancePayAmount = this.pendingAmount = 0;
 
     this.billNo = null;
     this.custID = null;
     this.custName = null;
-    // this.userContact = null;
     this.custContact = null;
-    // this.userFullName = null;
-    // for (const control in itemsForm.controls) {
-    //   if (itemsForm.controls[control].value === true) {
-    //     itemsForm.controls[control].setValue(false);
-    //   }
-    // }
     discountCheckBox.control.setValue(false);
     advancepaycheck.control.setValue(false);
     customerSelect.control.setValue(false);
-
   }
 
   removeItemFromList(listname: string, total: string, item: Passport | Prewedding | Wedding | Birthday | Custom,
                      checkbox): void {
 
-      this[listname] = this[listname].filter(el => el.descr !== item.descr);
-      this[total] -= Number(item.price);
+      // this[listname] = this[listname].filter(el => el.descr !== item.descr);
+      // this[total] -= Number(item.price);
       // this.cartItems.filter(el => el.name !== item.name);
-      this.cartItems = [...this.passportItemList, ...this.preWeddingItemList, ...this.weddingItemList,
-        ...this.birthdayItemList, ...this.customItemList];
-      this.cartItemsTotal -= Number(item.price);
-      if (this.discountType === 'rupee') {
-        this.billDiscountedTotal = Number(this.cartItemsTotal - this.discountAmount);
-      } else {
-        this.billDiscountedTotal = Number(this.cartItemsTotal - (this.cartItemsTotal * (this.discountAmount / 100)));
-      }
-      this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+      // this.cartItems = [...this.passportItemList, ...this.preWeddingItemList, ...this.weddingItemList,
+      //   ...this.birthdayItemList, ...this.customItemList];
 
-      if (this.cartItems.length === 0) {
-        // itemsForm.controls[checkbox.name].setValue(false);
-        this.advancePayAmount = this.discountAmount = this.billDiscountedTotal = 0;
-        this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
 
-      }
+      // NEED
+      // this.cartItemsTotal -= Number(item.price);
+      // if (this.discountType === 'rupee') {
+      //   this.billDiscountedTotal = Number(this.cartItemsTotal - this.discountAmount);
+      // } else {
+      //   this.billDiscountedTotal = Number(this.cartItemsTotal - (this.cartItemsTotal * (this.discountAmount / 100)));
+      // }
+      // this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
 
-  }
-
-  getQunatity(listName: string, refItem: any,  qtyInput: NgModel, listTotal: string) {
-    const dialogRef = this.qntyDialog.open(EditQuantityComponent, {
-      panelClass: 'panelClass',
-      data: { quantity : +qtyInput.value }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.updateAmount(listTotal, refItem, result.quantity, 'update');
-      }
-    });
-  }
-
-  openDialog(componentName: string, listname: string, total: string): void {
-    let cmpName = null;
-    switch (componentName) {
-      case 'PassportComponent':
-        cmpName = PassportComponent;
-        break;
-      case 'PreweddingComponent':
-        cmpName = PreweddingComponent;
-        break;
-      case 'WeddingComponent':
-        cmpName = WeddingComponent;
-        break;
-      case 'BirthdayComponent':
-        cmpName = BirthdayComponent;
-        break;
-      case 'CustomComponent':
-        cmpName = CustomComponent;
-        break;
-      default:
-        break;
-    }
-
-    if (cmpName != null) {
-      const dialogRef = this.dialog.open(cmpName, {
-        panelClass: 'panelClass'
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-
-          const descr  = result.split('|')[0].trim();
-          const price = Number(result.split('|')[1].trim());
-          const tPrice = price;
-          const address = '';
-          const ifUrgent = false;
-          const qty = 1;
-          !isUndefined(result) ? this[listname].push({descr, price, address, ifUrgent, qty, tPrice}) : this[listname].push();
-          // !isUndefined(result) ? this.cartItems.push({name, price}) : this.cartItems.push();
-          this[total] += Number(price);
-          this.cartItems = [...this.passportItemList, ...this.preWeddingItemList, ...this.weddingItemList,
-            ...this.birthdayItemList, ...this.customItemList];
-          this.cartItemsTotal += Number(price);
-          if (this.discountType === 'rupee') {
-            this.billDiscountedTotal = Number(this.cartItemsTotal - this.discountAmount);
-          } else {
-            this.billDiscountedTotal = Number(this.cartItemsTotal - (this.cartItemsTotal * (this.discountAmount / 100)));
-          }
-
-          this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
-          console.log(this.billDiscountedTotal);
-        }
-      });
-    } else {
-      alert('No component Found');
-      console.log('No component Found');
-    }
+      // if (this.cartItems.length === 0) {
+      //   this.advancePayAmount = this.discountAmount = this.billDiscountedTotal = 0;
+      //   this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+      // }
 
   }
 
-  itemQPButton(listName: string, refItem: any, qtyInput: NgModel, listTotal: string) {
-    let qty = +qtyInput.value;
-    qty < 0 ? qty = 1 : qty = qty;
-    if (qty >= 1) {
-      this[listName].map(obj => {
-        if (obj.descr === refItem.descr) {
-          this.updateAmount(listTotal, obj, qty, 'add');
-        }
-      });
-    }
+  // updateAmount(listTotal, obj, qty, modificationType) {
+  //   this[listTotal] -= Number(obj.qty * obj.price);
+  //   this.cartItemsTotal -= Number(obj.qty * obj.price);
+  //   if (modificationType === 'add') {
+  //     obj.qty = qty + 1;
+  //   } else if (modificationType === 'minus') {
+  //     obj.qty = qty - 1;
+  //   } else {
+  //     obj.qty = qty;
+  //   }
+  //   obj.tPrice = obj.qty * obj.price;
+  //   this[listTotal] += Number(obj.tPrice);
+  //   this.cartItemsTotal += Number(obj.tPrice);
+  //   this.cartItems = [...this.passportItemList, ...this.preWeddingItemList, ...this.weddingItemList,
+  //     ...this.birthdayItemList, ...this.customItemList];
+  //   if (this.discountType === 'rupee') {
+  //     this.billDiscountedTotal = Number(this.cartItemsTotal - this.discountAmount);
+  //   } else {
+  //     this.billDiscountedTotal = Number(this.cartItemsTotal - (this.cartItemsTotal * (this.discountAmount / 100)));
+  //   }
+  //   this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+  // }
 
-  }
+  // NEED
+  // showSubcontainer(listname: string, total: string, ifChecked: boolean) {
+  //   if (!ifChecked) {
+  //     this[listname] = []; this[total] = 0;
+  //   }
 
-  itemQMButton(listName: string, refItem: any,  qtyInput: NgModel, listTotal: string) {
-    let qty = +qtyInput.value;
-    qty <= 0 ? qty = 1 : qty = qty;
-    if (qty > 1) {
-      this[listName].map(obj => {
-        if (obj.descr === refItem.descr) {
-          this.updateAmount(listTotal, obj, qty, 'minus');
-        }
-      });
-    }
-  }
-
-  updateAmount(listTotal, obj, qty, modificationType) {
-    this[listTotal] -= Number(obj.qty * obj.price);
-    this.cartItemsTotal -= Number(obj.qty * obj.price);
-    if (modificationType === 'add') {
-      obj.qty = qty + 1;
-    } else if (modificationType === 'minus') {
-      obj.qty = qty - 1;
-    } else {
-      obj.qty = qty;
-    }
-    obj.tPrice = obj.qty * obj.price;
-    this[listTotal] += Number(obj.tPrice);
-    this.cartItemsTotal += Number(obj.tPrice);
-    this.cartItems = [...this.passportItemList, ...this.preWeddingItemList, ...this.weddingItemList,
-      ...this.birthdayItemList, ...this.customItemList];
-    if (this.discountType === 'rupee') {
-      this.billDiscountedTotal = Number(this.cartItemsTotal - this.discountAmount);
-    } else {
-      this.billDiscountedTotal = Number(this.cartItemsTotal - (this.cartItemsTotal * (this.discountAmount / 100)));
-    }
-    this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
-  }
-
-  showSubcontainer(listname: string, total: string, ifChecked: boolean) {
-    if (!ifChecked) {
-      this[listname] = []; this[total] = 0;
-    }
-
-    this.cartItems = [...this.passportItemList, ...this.preWeddingItemList, ...this.weddingItemList,
-                      ...this.birthdayItemList, ...this.customItemList];
-    this.cartItemsTotal = this.passportTotal + this.preweddingTotal + this.weddingTotal +
-                          this.birthdayTotal + this.customTotal;
-    return this[listname].length > 0 && ifChecked ? true : false;
-  }
+  //   this.cartItems = [...this.passportItemList, ...this.preWeddingItemList, ...this.weddingItemList,
+  //                     ...this.birthdayItemList, ...this.customItemList];
+  //   this.cartItemsTotal = this.passportTotal + this.preweddingTotal + this.weddingTotal +
+  //                         this.birthdayTotal + this.customTotal;
+  //   return this[listname].length > 0 && ifChecked ? true : false;
+  // }
 
   // activateUrgent(item: Passport) {
   //   console.log('activated');
@@ -408,7 +276,7 @@ export class CenterBillAdd2Component implements OnInit {
   saveBill() {
 
     if (this.custID) {
-      if (this.cartItems.length > 0) {
+      if (this.checkoutItems.length > 0) {
         if (this.advancePayAmount > this.billDiscountedTotal) {
           this.displaycustomError('Advance payment can not be greater than total amount');
           return false;
@@ -421,7 +289,7 @@ export class CenterBillAdd2Component implements OnInit {
 
 
         this.advancePayAmount = Number(this.advancePayAmount);
-        const billTotal = this.cartItemsTotal;
+        const billTotal = this.itemListTotal;
         // const advancePayment = this.advancePayAmount;
         const pendingPayment = this.pendingAmount;
         // const pPaymentType = null;
@@ -435,7 +303,7 @@ export class CenterBillAdd2Component implements OnInit {
           }];
           // aPaymentType = this.paymentType;
         }
-        const billDetails = this.cartItems;
+        const billDetails = this.checkoutItems;
         const userID = this.userID;
         const custID = this.custID;
         const custContact = this.custContact;
@@ -505,71 +373,61 @@ export class CenterBillAdd2Component implements OnInit {
     });
   }
 
-  addAddress(listname: string, item: Passport | Prewedding | Wedding | Birthday | Custom): void {
-    if (EditAddressComponent != null) {
-      const editAddressDialog = this.dialog.open(EditAddressComponent, {
-        width: '600px',
-        data: item.address
-      });
-
-      editAddressDialog.afterClosed().subscribe(addressForm => {
-        if (addressForm) {
-          const values = Object.keys(addressForm).map(key => addressForm[key]);
-          const address = values.join(', ');
-          this[listname].map(obj => {
-            if (obj.descr === item.descr) {
-              obj.address = address;
-            }
-          });
-        }
-      });
-    } else {
-      alert('No component Found');
-      console.log('No component Found');
-    }
-  }
-
+  // fires when discount amount changed
   addDiscount(discountAmountModel: NgModel) {
     // this.cartItemsTotal = 15;
-    if (!discountAmountModel.control.errors && this.cartItemsTotal > 0) {
-      if (this.discountType === 'rupee') {
-        this.billDiscountedTotal = Number(this.cartItemsTotal - Number(this.discountAmount));
-      } else {
-        this.billDiscountedTotal = Number(this.cartItemsTotal - (this.cartItemsTotal * (this.discountAmount / 100)));
+    if (this.discountAmount <= (this.itemListTotal - this.advancePayAmount)) {
+      if (!discountAmountModel.control.errors && this.itemListTotal > 0) {
+        if (this.discountType === 'rupee') {
+          this.billDiscountedTotal = +this.itemListTotal - +this.discountAmount;
+        } else {
+          this.billDiscountedTotal = +this.itemListTotal - (this.itemListTotal * (this.discountAmount / 100));
+        }
+        this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
       }
-      this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+    } else {
+      this.discountAmount = 0;
+      this.displaycustomError('Discount can not be greater than total');
     }
   }
 
   onDiscountTypeChange(discountType) {
     this.discountType = discountType;
     this.discountAmount = 0;
-    this.billDiscountedTotal = Number(this.cartItemsTotal);
+    this.billDiscountedTotal = +this.itemListTotal;
   }
 
 
   takeAdvancePay(advancePayModel: NgModel) {
-    if (!advancePayModel.control.errors && this.cartItemsTotal > 0) {
-      this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+    if (this.advancePayAmount > this.billDiscountedTotal) {
+      this.displaycustomError('Amount can not be greater than pending amount');
+      this.advancePayAmount = 0;
+      return false;
+    }
+    if (!advancePayModel.control.errors && this.itemListTotal > 0) {
+
       // this.billDiscountedTotal =
-      // if (this.discountType === 'rupee') {
-      //   this.billDiscountedTotal = Number(this.cartItemsTotal - Number(this.discountAmount));
-      // } else {
-      //   this.billDiscountedTotal = Number(this.cartItemsTotal - (this.cartItemsTotal * (this.discountAmount / 100)));
-      // }
+      if (this.discountType === 'rupee') {
+        this.billDiscountedTotal = +this.itemListTotal - +this.discountAmount;
+      } else {
+        this.billDiscountedTotal = +this.itemListTotal - (this.itemListTotal * (this.discountAmount / 100));
+      }
+      this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+
     }
   }
 
-  //set discount to zero
+  // set discount to zero when user clicks on checkbox
   discountCheckClicked() {
     this.discountAmount = 0;
-    this.billDiscountedTotal = this.cartItemsTotal;
-    this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
     this.discountType = 'rupee';
+    this.billDiscountedTotal = this.itemListTotal;
+    this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
   }
 
   advancePaymentCheckClicked() {
     this.advancePayAmount = 0;
+    this.billDiscountedTotal = this.itemListTotal - this.discountAmount;
     this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
   }
 
@@ -588,9 +446,241 @@ export class CenterBillAdd2Component implements OnInit {
     }, 3000);
   }
 
+// New Implementation
+  packageCheckboxClick(pckg) {
+    this.itemListAll = this.itemListAll.filter(itm =>
+      Object.keys(itm)[0] !== pckg.orderID
+    );
 
+    this.checkoutItems = this.checkoutItems.filter(itm => {
+      if (itm.orderID.search(pckg.orderID) > -1) {
+        this.itemListTotal -= itm.tPrice;
+
+        //update discount
+        if (this.discountType === 'rupee') {
+          this.billDiscountedTotal = +this.itemListTotal - this.discountAmount;
+        } else {
+          this.billDiscountedTotal = +this.itemListTotal - (this.itemListTotal * (this.discountAmount / 100));
+        }
+
+        this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+      }
+      return itm.orderID.search(pckg.orderID)  === -1;
+    }
+    );
+
+
+  }
   openServicesDialog(pckgObject) {
-    console.log(pckgObject);
+    // console.log(pckgObject);
+    const dialogRef = this.dynamicDialog.open(DynamicDialogComponent, {
+      panelClass: 'panelClass',
+      data: { package : pckgObject }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // console.log(result);
+
+        // add item to the itemListAll
+        const obj = {};
+        const key = result.orderID.split('_srv')[0];
+        obj[key] = [];
+        obj[key].push({...result, qty : 1, address : {}});
+        const existingList  = this.itemListAll.filter(itm => itm[key]);
+        if (existingList.length === 0) {
+          this.itemListAll.push(obj);
+        } else {
+          existingList[0][key].push({...result, qty : 1, address : {}});
+        }
+        // update checkoutList
+        this.checkoutItems.push(this.makeItemForCheckout({...obj[key][0]}));
+        this.totalQuantity = _.pluck(this.checkoutItems, 'qty').reduce((a, b) => a + b, 0);
+
+        // update itemsListTotal
+        this.itemListTotal += result.price;
+
+        //update discount
+        if (this.discountType === 'rupee') {
+          this.billDiscountedTotal = +this.itemListTotal - this.discountAmount;
+        } else {
+          this.billDiscountedTotal = +this.itemListTotal - (this.itemListTotal * (this.discountAmount / 100));
+        }
+
+        this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+      }
+    });
+  }
+
+  makeItemForCheckout(data) {
+    return {
+      qty: data.qty,
+      descr: data.name,
+      price: data.price,
+      address: data.address,
+      tPrice: data.price * data.qty,
+      orderType: data.orderType,
+      orderID: data.orderID
+    };
+  }
+
+  // when user removes from itemListAll
+  removeService(findID, removeID) {
+    const curIdList = this.itemListAll.filter(res =>
+        _.keys(res)[0] === findID
+    );
+    const finalList = curIdList[0][findID].filter(rt => {
+        if (rt.orderID === removeID) {
+          this.itemListTotal -= (rt.qty * rt.price);
+          this.billDiscountedTotal -= (rt.qty * rt.price);
+          // update discount
+          if (this.discountType === 'rupee') {
+            this.billDiscountedTotal = +this.itemListTotal - this.discountAmount;
+          } else {
+            this.billDiscountedTotal = +this.itemListTotal - (this.itemListTotal * (this.discountAmount / 100));
+          }
+          this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+        }
+        return rt.orderID !== removeID;
+      }
+    );
+    curIdList[0][findID] = finalList;
+    // update checkoutList
+    this.checkoutItems = this.checkoutItems.filter(res => res.orderID !== removeID);
+    this.totalQuantity = _.pluck(this.checkoutItems, 'qty').reduce((a, b) => a + b, 0);
+  }
+
+  // when user adds quantity to itemList
+  addQuantity(findID, refID, servQuantity) {
+    let curtQty = +servQuantity.value;
+    curtQty < 0 ? curtQty = 1 : curtQty = curtQty;
+    if (curtQty >= 1) {
+      const curIdList = this.itemListAll.filter(res =>
+        _.keys(res)[0] === findID
+      );
+      curIdList[0][findID].map(rt => {
+          if (rt.orderID === refID) {
+            rt.qty += 1;
+            this.itemListTotal += rt.price;
+            // update checkoutList
+            const refdata = _.findWhere(this.checkoutItems, {orderID : refID});
+            refdata.qty = rt.qty;
+            refdata.tPrice = rt.price * rt.qty;
+            this.totalQuantity = _.pluck(this.checkoutItems, 'qty').reduce((a, b) => a + b, 0);
+
+            // update discount
+            if (this.discountType === 'rupee') {
+              this.billDiscountedTotal = +this.itemListTotal - this.discountAmount;
+            } else {
+              this.billDiscountedTotal = +this.itemListTotal - (this.itemListTotal * (this.discountAmount / 100));
+            }
+            this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+          }
+        }
+      );
+    }
+  }
+  // when user decreases quantity to itemList
+  removeQuantity(findID, removeID, servQuantity) {
+    let curtQty = +servQuantity.value;
+    curtQty <= 0 ? curtQty = 1 : curtQty = curtQty;
+    if (curtQty > 1) {
+      const curIdList = this.itemListAll.filter(res =>
+          _.keys(res)[0] === findID
+      );
+      curIdList[0][findID].map(rt => {
+          if (rt.orderID === removeID) {
+            rt.qty -= 1;
+            this.itemListTotal -= rt.price;
+            // update checkoutList
+            const refdata = _.findWhere(this.checkoutItems, {orderID : removeID});
+            refdata.qty = rt.qty;
+            refdata.tPrice = rt.price * rt.qty;
+            this.totalQuantity = _.pluck(this.checkoutItems, 'qty').reduce((a, b) => a + b, 0);
+
+            // update discount
+            if (this.discountType === 'rupee') {
+              this.billDiscountedTotal = +this.itemListTotal - this.discountAmount;
+            } else {
+              this.billDiscountedTotal = +this.itemListTotal - (this.itemListTotal * (this.discountAmount / 100));
+            }
+            this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+          }
+        }
+      );
+    }
+  }
+
+  // when user enters quantity value directly for itemList from dialog
+  updateQuantity(findID, refID, servQuantity) {
+    let curtQty = servQuantity;
+    curtQty <= 0 ? curtQty = 1 : curtQty = curtQty;
+    if (curtQty > 1) {
+      const curIdList = this.itemListAll.filter(res =>
+          _.keys(res)[0] === findID
+      );
+      curIdList[0][findID].map(rt => {
+          if (rt.orderID === refID) {
+            this.itemListTotal -= rt.qty * rt.price;
+            rt.qty = curtQty;
+            // update checkoutList
+            const refdata = _.findWhere(this.checkoutItems, {orderID : refID});
+            refdata.qty = rt.qty;
+            refdata.tPrice = rt.price * rt.qty;
+            this.totalQuantity = _.pluck(this.checkoutItems, 'qty').reduce((a, b) => a + b, 0);
+
+            this.itemListTotal += refdata.tPrice;
+            // update discount
+            if (this.discountType === 'rupee') {
+              this.billDiscountedTotal = +this.itemListTotal - this.discountAmount;
+            } else {
+              this.billDiscountedTotal = +this.itemListTotal - (this.itemListTotal * (this.discountAmount / 100));
+            }
+            this.pendingAmount = this.billDiscountedTotal - this.advancePayAmount;
+
+          }
+        }
+      );
+    }
+  }
+
+  openQtyInput(findID, refID, servQuantity) {
+    const dialogRef = this.qntyDialog.open(EditQuantityComponent, {
+      panelClass: 'panelClass',
+      data: { quantity : +servQuantity.value }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateQuantity(findID, refID, result.quantity);
+      }
+    });
+  }
+
+  insertAddress(findID, refID, refAddress) {
+    const editAddressDialog = this.dialog.open(EditAddressComponent, {
+      width: '600px',
+      data: {...refAddress}
+    });
+
+    editAddressDialog.afterClosed().subscribe(addressForm => {
+      if (addressForm) {
+        console.log(addressForm);
+        const curIdList = this.itemListAll.filter(res =>
+            _.keys(res)[0] === findID
+        );
+        curIdList[0][findID].map(rt => {
+            if (rt.orderID === refID) {
+              rt.address = addressForm;
+              // update checkoutList
+              const refdata = _.findWhere(this.checkoutItems, {orderID : refID});
+              refdata.address = {...rt.address};
+              this.totalQuantity = _.pluck(this.checkoutItems, 'qty').reduce((a, b) => a + b, 0);
+            }
+          }
+        );
+      }
+    });
   }
 
 }

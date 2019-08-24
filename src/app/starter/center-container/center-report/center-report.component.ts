@@ -71,7 +71,7 @@ export class CenterReportComponent implements OnInit {
 
   ngOnInit() {
 
-    Highcharts.chart('container', this.options);
+    // Highcharts.chart('container', this.options);
   }
 
 }

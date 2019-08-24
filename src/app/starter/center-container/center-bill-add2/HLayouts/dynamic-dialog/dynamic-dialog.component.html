@@ -1,0 +1,18 @@
+<div class="dialogContainer">
+    <h1 mat-dialog-title>{{title}} Templates</h1>
+    <div mat-dialog-content>
+      <p>Please choose template from below</p>
+      <form #itemsForm="ngForm">
+          <div class="form-group">
+            <mat-radio-group name="sTemplate" ngModel #sTemplate aria-label="Select an option" class="sTemplate" *ngFor="let s of services">
+                <mat-radio-button class="sTemplateOption" value="{{s.name}}">{{s.name}} <span class="sTemplatePrice">{{s.price | currency: 'INR'}}</span></mat-radio-button>
+            </mat-radio-group>
+          </div>
+      </form>
+    </div>
+    <div mat-dialog-actions class="dialog-actions">
+      <button mat-raised-button (click)="onNoClick()" class="btn btn-danger">No Thanks</button>
+      <button mat-raised-button (click)="returnFunc(itemsForm.control.value.sTemplate, itemsForm)" cdkFocusInitial class="btn btn-success">Ok</button>
+    </div>
+  </div>
+  <!-- [mat-dialog-close]="returnFunc(itemsForm.value.sTemplate, itemsForm)" -->

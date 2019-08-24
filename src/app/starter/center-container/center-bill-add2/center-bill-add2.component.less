@@ -84,7 +84,9 @@ div.bill{
   overflow-y: auto;
   margin-top: 15px;
   color: #fff;
-  background: #68382b;
+  // background: #68382b;
+  background: #2e2e2e;
+
 
 }
 
@@ -95,7 +97,7 @@ div.bill{
     vertical-align: sub;
     cursor: pointer;
   }
-  span.itemAddress {
+  span.servAddress {
     display: inline-block;
     font-size: 12px;
     color: #ffc107;
@@ -110,16 +112,16 @@ li {
   }
 }
 
-span.itemPrice {
+span.servPrice {
   float: right;
   line-height: 1.7;
   opacity: 0.5;
   margin-right: 20px;
 }
 
-span.itemQuantity {
+span.servQuantity {
   opacity: 1;
-  button.itemQButton {
+  button.servQButton {
     height: 22px;
     padding: 0;
     width: 42px;
@@ -130,11 +132,11 @@ span.itemQuantity {
     border-bottom-right-radius: 22px;
     min-width: 0 !important;
   }
-  button.itemQPlusBtn {
+  button.servQPlusBtn {
     border-bottom-left-radius: 0;
     border-top-right-radius: 0;
   }
-  button.itemQMinusBtn {
+  button.servQMinusBtn {
     border-bottom-right-radius: 0;
     border-top-left-radius: 0;
   }
@@ -182,7 +184,7 @@ hr.hr-final {
 
 .cartItemsFinal {
   font-weight: 700;
-  span.itemPrice {
+  span.servPrice {
     opacity: 1;
   }
 }
@@ -382,6 +384,7 @@ hr.hr-final {
 }
 
 ::ng-deep mat-dialog-container {
-  background: #73483c !important;
+  // background: #73483c !important;
+  background: #2e2e2e !important;
   color: #fff !important;
 }

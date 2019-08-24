@@ -10,6 +10,7 @@ export class NavigationComponent implements OnInit {
 
   sidebarFlag = false;
   isBillRoute = false;
+  ifAdmin = false;
   constructor(router: Router) {
     router.events.subscribe(val => {
       if (location.pathname.search('bill/list') !== -1 || location.pathname.search('bill/add') !== -1) {
@@ -18,6 +19,8 @@ export class NavigationComponent implements OnInit {
         this.isBillRoute = false;
       }
     });
+
+    sessionStorage.getItem('type') === 'admin' || 'superadmin' ? this.ifAdmin = true : this.ifAdmin = false;
   }
 
   ngOnInit() {

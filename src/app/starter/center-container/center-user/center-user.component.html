@@ -1,0 +1,249 @@
+<div class="row main_container">
+    <div class="col-md-7 leftPart">
+      <div class="listHeader">
+
+        <h5 class="mainTitle">User List ({{dataSource.filteredData.length}})</h5>
+        <div class="listToolBar" >
+          <mat-form-field>
+            <mat-label>Filter By</mat-label>
+            <mat-select ngModel #filterCategory="ngModel" (selectionChange)="filterCategoryListener(filterCategory.value)">
+              <mat-option *ngFor="let filter of filterByCategories; let i" [value]="filter">
+                {{filter}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- userFullName search -->
+          <mat-form-field *ngIf="activeFilterType === fMetadata[0].type">
+            <input matInput placeholder="Enter user name" ngModel #filter1="ngModel" (keyup)="filterTable(filter1)">
+          </mat-form-field>
+
+          <!-- userID search -->
+          <mat-form-field *ngIf="activeFilterType === fMetadata[1].type">
+            <input matInput placeholder="Enter user ID" ngModel #filter2="ngModel" (keyup)="filterTable(filter2)">
+          </mat-form-field>
+
+          <!-- type search -->
+          <mat-form-field *ngIf="activeFilterType === fMetadata[2].type">
+            <input matInput placeholder="Enter user type" ngModel #filter3="ngModel" (keyup)="filterTable(filter3)">
+          </mat-form-field>
+
+          <!-- userContact search -->
+          <mat-form-field *ngIf="activeFilterType === fMetadata[3].type">
+            <input matInput placeholder="Enter user contact no" ngModel #filter4="ngModel" (keyup)="filterTable(filter4)">
+          </mat-form-field>
+
+          <!-- userEmail search -->
+          <mat-form-field *ngIf="activeFilterType === fMetadata[4].type">
+            <input matInput placeholder="Enter user email" ngModel #filter5="ngModel" (keyup)="filterTable(filter5)">
+          </mat-form-field>
+
+          <!-- userAddress search -->
+          <mat-form-field *ngIf="activeFilterType === fMetadata[5].type">
+            <input matInput placeholder="Enter user address" ngModel #filter6="ngModel" (keyup)="filterTable(filter6)">
+          </mat-form-field>
+
+        </div>
+        <button class="filter_table_clear_button" mat-fab aria-label="Search" (click)="filterTable({value:'', control: { value: ''}}, filterCategory)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="subContainer">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 listTable">
+          <ng-container [matColumnDef]="listTableColumns[0]">
+            <th mat-header-cell *matHeaderCellDef> {{listTableColumnsTitles[0]}} </th>
+            <td mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </td>
+          </ng-container>
+
+          <ng-container [matColumnDef]="listTableColumns[1]">
+            <th mat-header-cell *matHeaderCellDef> {{listTableColumnsTitles[1]}} </th>
+            <td mat-cell *matCellDef="let element;"> {{element.userFullName}} </td>
+          </ng-container>
+
+          <ng-container [matColumnDef]="listTableColumns[2]">
+            <th mat-header-cell *matHeaderCellDef> {{listTableColumnsTitles[2]}} </th>
+            <td mat-cell *matCellDef="let element;"> {{element.userID}} </td>
+          </ng-container>
+
+          <ng-container [matColumnDef]="listTableColumns[3]">
+              <th mat-header-cell *matHeaderCellDef> {{listTableColumnsTitles[3]}} </th>
+              <td mat-cell *matCellDef="let element;"> {{element.type}} </td>
+            </ng-container>
+
+          <ng-container [matColumnDef]="listTableColumns[4]">
+            <th mat-header-cell *matHeaderCellDef> {{listTableColumnsTitles[4]}} </th>
+            <td mat-cell *matCellDef="let element;"> {{element.userContact}} </td>
+          </ng-container>
+
+          <ng-container [matColumnDef]="listTableColumns[5]">
+            <th mat-header-cell *matHeaderCellDef> {{listTableColumnsTitles[5]}} </th>
+            <td mat-cell *matCellDef="let element;"> {{element.userEmail}} </td>
+          </ng-container>
+
+          <ng-container [matColumnDef]="listTableColumns[6]">
+            <th mat-header-cell *matHeaderCellDef> {{listTableColumnsTitles[6]}} </th>
+            <td mat-cell *matCellDef="let element;">
+              {{element.userAddress.street}}, {{element.userAddress.landmark}},
+              {{element.userAddress.city}}, {{element.userAddress.postalCode}},
+              {{element.userAddress.state}}, {{element.userAddress.country}}
+
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="listTableColumns;sticky:true"></tr>
+          <tr mat-row *matRowDef="let row; columns: listTableColumns;" name="listRow" ngDefaultControl
+              ngModel #userRow="ngModel" (click)="showDetails(row, userForm)" [ngClass]="row.userID === activeUserID ? 'userActive' : ''"></tr>
+        </table>
+        <div class="empty_list" [hidden]="dataSource.filteredData.length > 0">
+          <img class="empty_image" src="assets\images\no-record-found.png" alt="no record found">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5 rightPart">
+        <h5 class="mainTitle">User Details</h5>
+        <!-- <span class="close" (click)="closeItem()" *ngIf="activeUserID">&times;</span> -->
+        <div class="form-group" class="mainButton">
+          <div class="verticalSeparator"></div>
+          <button type="button" mat-raised-button (click)="newUser(userForm)" class="btn btn-normal" [disabled]="editMode">Add User</button>
+          <button type="button" mat-raised-button (click)="editUser(userForm)" [hidden]="editMode" class="btn btn-normal"
+                  *ngIf="showDetailsMode" [disabled]="userModel.userTitle === null || editMode === true">Edit</button>
+          <button type="button" mat-raised-button (click)="editUser(userForm)" [hidden]="!editMode" class="btn btn-danger">Cancel Edit</button>
+        </div>
+        <div class="subContainer listItemDetails">
+          <form class="userForm" #userForm="ngForm" (ngSubmit)="saveUser(userForm)">
+            <div class="form-group">
+                <div class="flex-line">
+                    <mat-form-field class="one-part-half">
+                    <mat-label>Title</mat-label>
+                    <mat-select name="userTitle" [(ngModel)]="userModel.userTitle" required  #userTitle="ngModel" disabled>
+                      <mat-option *ngFor="let title of userTitles" [value]="title">
+                        {{title}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field class="one-part-full">
+                    <input matInput name="userFullName" placeholder="User Name" [(ngModel)]="userModel.userFullName"
+                            required #userFullName="ngModel" pattern="^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="flex-line">
+                  <mat-form-field>
+                    <input matInput name="userID" placeholder="User ID" [(ngModel)]="userModel.userID"
+                            required #userID="ngModel" pattern="^(?!.*__)(?!.*_$)[a-z_0-9]+$" disabled>
+                  </mat-form-field>
+
+                  <div class="mat-form-field">
+                    <button type="button" mat-raised-button (click)="checkUserID(userID.value)" class="btn btn-info" disabled>Check</button>
+                  </div>
+                </div>
+                <!-- <div class="warn-message text-danger" *ngIf="userID.errors">
+                  <div [hidden]="!userID.errors.required">
+                      <h6>&nbsp;User ID is taken.</h6>
+                  </div>
+                </div> -->
+                <div class="flex-line">
+                  <mat-form-field class="one-part">
+                    <input matInput name="userContact" placeholder="User Contact" [(ngModel)]="userModel.userContact"
+                            required #userContact="ngModel" pattern="^[6-9]\d{9}$" disabled>
+                  </mat-form-field>
+                  <mat-form-field class="three-part">
+                    <input matInput name="userEmail" placeholder="User Email" [(ngModel)]="userModel.userEmail"
+                            required #userEmail="ngModel" pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="flex-line">
+                  <mat-form-field class="one-part">
+                    <mat-label>Type</mat-label>
+                    <mat-select name="usertype" [(ngModel)]="userModel.type" required  #type="ngModel" disabled>
+                      <mat-option *ngFor="let typ of userTypes" [value]="typ">
+                        {{typ}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field class="three-part" [matTooltip]="passwordCriteria" [hidden]="editMode">
+                    <input type="password" matInput name="userPassword" placeholder="Password" [(ngModel)]="userModel.password"
+                            required #userPassword="ngModel"
+                            pattern="^(?=[a-zA-Z0-9#@$?]{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*" disabled>
+                      <mat-error *ngIf="userPassword.errors && (userPassword.dirty || userPassword.touched)">Password do not match criteria</mat-error>
+                  </mat-form-field>
+                  <mat-form-field class="three-part" [hidden]="editMode">
+                    <input type="password" matInput name="userPassword2" placeholder="Retype password" required [(ngModel)]="userModel.passwordT" #userPassword2="ngModel" disabled>
+                    <!-- <mat-error *ngIf="!passwordMatch">Passwords do not match</mat-error> -->
+                  </mat-form-field>
+                </div>
+                <br>
+                <div class="flex-line">
+                  <mat-form-field>
+                    <input matInput name="street" placeholder="Street/Place"
+                    [(ngModel)]="userModel.userAddress.street" required #street="ngModel" pattern="^[^,]+$" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="flex-line">
+                  <mat-form-field>
+                    <input matInput name="landmark" placeholder="Landmark" [(ngModel)]="userModel.userAddress.landmark" required #landmark="ngModel" pattern="^[^,]+$" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="flex-line">
+                  <mat-form-field>
+                    <mat-label>City</mat-label>
+                    <mat-select name="city" [(ngModel)]="userModel.userAddress.city" required  #city="ngModel" disabled>
+                      <mat-option *ngFor="let city of cities" [value]="city">
+                        {{city}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <input type="number" matInput name="postalcode" placeholder="Postal Code" [(ngModel)]="userModel.userAddress.postalCode"
+                    pattern="^[1-9][0-9]{5}$" required #postalcode="ngModel" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="flex-line">
+                  <mat-form-field>
+                    <mat-label>State</mat-label>
+                    <mat-select name="state" [(ngModel)]="userModel.userAddress.state" required #state="ngModel" disabled>
+                      <mat-option *ngFor="let state of states" [value]="state">
+                        {{state}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <mat-label>Country</mat-label>
+                    <mat-select name="country" [(ngModel)]="userModel.userAddress.country" required #country="ngModel" disabled>
+                      <mat-option *ngFor="let country of countries" [value]="country">
+                        {{country}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="warn-message" *ngIf="street.errors || landmark.errors">
+                  <span class="errorText text-danger" *ngIf="(street.errors && street.errors['pattern']) || (landmark.errors && landmark.errors['pattern']) ">
+                    Please do not include comma [,] in the address.</span>
+                </div>
+                <div class="warn-message" *ngIf="!passwordMatch">
+                  <span class="errorText text-danger">
+                    Passwords do not match</span>
+                </div>
+                <div class="warn-message font-weight-bold" *ngIf="customError.hasError">
+                  <span class="errorText text-danger">{{customError.error}}</span>
+                </div>
+                <!-- <button mat-raised-button type="button" (click)="test(city)">Test</button> -->
+                <!-- <button mat-raised-button type="submit">Add</button> -->
+                <div class="form-group" class="mainButton">
+                  <button type="button" mat-raised-button (click)="resetForm(userForm)" class="btn btn-danger">Reset</button>
+                  <button type="button" mat-raised-button (click)="saveUser(userForm)"
+                  class="btn btn-success">Save</button>
+                  <!-- [disabled]="userForm.valid === false || userTitle.disabled"  -->
+                </div>
+            </div>
+        </form>
+        </div>
+        <!-- <div class="subContainer" [hidden]="activeUserID !== null">
+          <img class="empty_image" src="assets\images\empty.jpg" alt="empty_image">
+          <h3 class="empty_text">Please select user from left to view details.</h3>
+        </div> -->
+    </div>
+  </div>

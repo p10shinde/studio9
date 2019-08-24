@@ -18,7 +18,7 @@ export class APIInterceptor implements HttpInterceptor {
 
   getToken() {
     const userEmail = sessionStorage.getItem('userEmail');
-    const password = sessionStorage.getItem('password');
+    const password = sessionStorage.getItem('passwordT');
     if (userEmail != null) {
       return btoa(`${userEmail}:${password}`);
     }

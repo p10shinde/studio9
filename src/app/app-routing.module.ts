@@ -14,6 +14,9 @@ const routes: Routes = [
   },
   { path: 'bill',
     loadChildren: () => import('./starter/center-container/center-container.module').then(mod => mod.CenterContainerModule)
+  },
+  { path: 'users',
+    loadChildren: () => import('./starter/center-container/center-container.module').then(mod => mod.CenterContainerModule)
   }
 ];
 
