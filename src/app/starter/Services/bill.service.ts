@@ -1,10 +1,9 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CartItems } from '../center-container/center-bill-add/Datastructures/CartItems';
 import { catchError } from 'rxjs/operators';
 import { ErrorService } from './error.service';
 import { formatDate } from '@angular/common';
-import { Bill } from '../center-container/center-bill-add/Datastructures/bill';
+import { Bill } from '../center-container/center-bill-add2/Datastructures/bill';
 
 @Injectable({
   providedIn: 'root'

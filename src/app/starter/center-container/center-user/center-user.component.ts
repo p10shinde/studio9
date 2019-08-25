@@ -83,72 +83,72 @@ export class CenterUserComponent implements OnInit {
     this.loggedin = this.userService.checkLoggedIn();
     if (!this.loggedin) {
       this.router.navigate(['/login']);
-    }
+    } else {
+      this.userModel = {
+        // userTitle: 'Ms',
+        // userFullName: 'Shailja Singh',
+        // userEmail: 'sshailja7@gmail.com',
+        // userID: 'sshailja_7',
+        // type: 'user',
+        // password: null,
+        // passwordT: null,
+        // userContact: '9458694934',
+        // userAddress : {
+        //   street: '79 Green Park Bisalpur Road',
+        //   landmark: 'Radha madhav public school',
+        //   city: 'Bareilly',
+        //   postalCode: '243005',
+        //   state: 'Uttar Pradesh',
+        //   country: 'India'
+        // }
 
-    this.userModel = {
-      // userTitle: 'Ms',
-      // userFullName: 'Shailja Singh',
-      // userEmail: 'sshailja7@gmail.com',
-      // userID: 'sshailja_7',
-      // type: 'user',
-      // password: null,
-      // passwordT: null,
-      // userContact: '9458694934',
-      // userAddress : {
-      //   street: '79 Green Park Bisalpur Road',
-      //   landmark: 'Radha madhav public school',
-      //   city: 'Bareilly',
-      //   postalCode: '243005',
-      //   state: 'Uttar Pradesh',
-      //   country: 'India'
-      // }
-
-        userTitle: null,
-        userFullName: null,
-        userEmail: null,
-        userID: null,
-        type: 'user',
-        password: null,
-        passwordT: null,
-        userContact: null,
-        userAddress : {
-          street: null,
-          landmark: null,
-          city: null,
-          postalCode: null,
-          state: null,
-          country: null
-        }
-    };
-
-    this.userService.getAllUsers().subscribe(result => {
-      this.dataSource = new MatTableDataSource(result);
-    },
-    err => {
-      if (err.status === 404) {
-        this.snackbarService.open('No Users available yet. Please register users.');
-      } else {
-        this.snackbarService.open(err.message);
-      }
-    },
-    () => {
-      console.log('Completed successfully');
-    });
-
-    this.userService.getUSubscription().subscribe(result => {
-      const newData = result.data;
-      if (result.type === 'add') {
-        this.dataSource.data.push(newData);
-        this.dataSource.data = this.dataSource.data;
-      } else {
-        this.dataSource.data = this.dataSource.data.map(rec => {
-          if (rec.userID === newData.userID) {
-            return rec = newData;
+          userTitle: null,
+          userFullName: null,
+          userEmail: null,
+          userID: null,
+          type: 'user',
+          password: null,
+          passwordT: null,
+          userContact: null,
+          userAddress : {
+            street: null,
+            landmark: null,
+            city: null,
+            postalCode: null,
+            state: null,
+            country: null
           }
-          return rec;
-        });
-      }
-    });
+      };
+
+      this.userService.getAllUsers().subscribe(result => {
+        this.dataSource = new MatTableDataSource(result);
+      },
+      err => {
+        if (err.status === 404) {
+          this.snackbarService.open('No Users available yet. Please register users.');
+        } else {
+          this.snackbarService.open(err.message);
+        }
+      },
+      () => {
+        console.log('Completed successfully');
+      });
+
+      this.userService.getUSubscription().subscribe(result => {
+        const newData = result.data;
+        if (result.type === 'add') {
+          this.dataSource.data.push(newData);
+          this.dataSource.data = this.dataSource.data;
+        } else {
+          this.dataSource.data = this.dataSource.data.map(rec => {
+            if (rec.userID === newData.userID) {
+              return rec = newData;
+            }
+            return rec;
+          });
+        }
+      });
+    }
   }
 
   showDetails(rowData: User, formData: NgForm) {

@@ -71,66 +71,67 @@ export class CenterCustomerComponent implements OnInit {
     this.loggedin = this.userService.checkLoggedIn();
     if (!this.loggedin) {
       this.router.navigate(['/login']);
-    }
+    } else {
 
-    this.customerModel = {
-      // custTitle: 'Ms',
-      // custName: 'Shailja Singh',
-      // custEmail: 'sshailja7@gmail.com',
-      // custID: 'sshailja_7',
-      // custContact: '9458694934',
-      // custAddress : {
-      //   street: '79 Green Park Bisalpur Road',
-      //   landmark: 'Radha madhav public school',
-      //   city: 'Bareilly',
-      //   postalCode: '243005',
-      //   state: 'Uttar Pradesh',
-      //   country: 'India'
-      // }
+      this.customerModel = {
+        // custTitle: 'Ms',
+        // custName: 'Shailja Singh',
+        // custEmail: 'sshailja7@gmail.com',
+        // custID: 'sshailja_7',
+        // custContact: '9458694934',
+        // custAddress : {
+        //   street: '79 Green Park Bisalpur Road',
+        //   landmark: 'Radha madhav public school',
+        //   city: 'Bareilly',
+        //   postalCode: '243005',
+        //   state: 'Uttar Pradesh',
+        //   country: 'India'
+        // }
 
-        custTitle: null,
-        custName: null,
-        custEmail: null,
-        custID: null,
-        custContact: null,
-        custAddress : {
-          street: null,
-          landmark: null,
-          city: null,
-          postalCode: null,
-          state: null,
-          country: null
-        }
-    };
-
-    this.custService.getAllCustomers().subscribe(result => {
-      this.dataSource = new MatTableDataSource(result);
-    },
-    err => {
-      if (err.status === 404) {
-        this.snackbarService.open('No customers available yet. Please register customers.');
-      } else {
-        this.snackbarService.open(err.message);
-      }
-    },
-    () => {
-      console.log('Completed successfully');
-    });
-
-    this.custService.getCSubscription().subscribe(result => {
-      const newData = result.data;
-      if (result.type === 'add') {
-        this.dataSource.data.push(newData);
-        this.dataSource.data = this.dataSource.data;
-      } else {
-        this.dataSource.data = this.dataSource.data.map(rec => {
-          if (rec.custID === newData.custID) {
-            return rec = newData;
+          custTitle: null,
+          custName: null,
+          custEmail: null,
+          custID: null,
+          custContact: null,
+          custAddress : {
+            street: null,
+            landmark: null,
+            city: null,
+            postalCode: null,
+            state: null,
+            country: null
           }
-          return rec;
-        });
-      }
-    });
+      };
+
+      this.custService.getAllCustomers().subscribe(result => {
+        this.dataSource = new MatTableDataSource(result);
+      },
+      err => {
+        if (err.status === 404) {
+          this.snackbarService.open('No customers available yet. Please register customers.');
+        } else {
+          this.snackbarService.open(err.message);
+        }
+      },
+      () => {
+        console.log('Completed successfully');
+      });
+
+      this.custService.getCSubscription().subscribe(result => {
+        const newData = result.data;
+        if (result.type === 'add') {
+          this.dataSource.data.push(newData);
+          this.dataSource.data = this.dataSource.data;
+        } else {
+          this.dataSource.data = this.dataSource.data.map(rec => {
+            if (rec.custID === newData.custID) {
+              return rec = newData;
+            }
+            return rec;
+          });
+        }
+      });
+    }
   }
 
   showDetails(rowData, formData: NgForm) {

@@ -1,19 +1,9 @@
 import { Component, OnInit, NgZone, QueryList, ViewChildren, ElementRef, Pipe, PipeTransform } from '@angular/core';
 import { NgForm, NgModel, NgControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PassportComponent } from './HLayouts/passport/passport.component';
 import {MatDialog} from '@angular/material/dialog';
 import { CartItems } from './Datastructures/CartItems';
 import { isUndefined } from 'util';
-import { Passport } from './Datastructures/Passport';
-import { Wedding } from './Datastructures/Wedding';
-import { PreweddingComponent } from './HLayouts/prewedding/prewedding.component';
-import { Prewedding } from './Datastructures/Prewedding';
-import { WeddingComponent } from './HLayouts/wedding/wedding.component';
-import { BirthdayComponent } from './HLayouts/birthday/birthday.component';
-import { Birthday } from './Datastructures/Birthday';
-import { CustomComponent } from './HLayouts/custom/custom.component';
-import { Custom } from './Datastructures/Custom';
 import { UserService } from '../../Services/user.service';
 import { CustomerService } from '../../Services/customer.service';
 import { CustomsnackbarService } from '../../Services/customsnackbar.service';
@@ -103,38 +93,40 @@ export class CenterBillAdd2Component implements OnInit {
     this.userContact = sessionStorage.getItem('userContact');
     if (!this.loggedin) {
       this.router.navigate(['/login']);
+    } else {
+
+      this.userService.validateUserSubscription().subscribe(resp => {
+        this.loggedin = resp;
+      });
+
+      this.customerService.getCustomerNameList().subscribe(list => {
+        this.customerNameList = list;
+      });
+
+      this.zone.runOutsideAngular(() => {
+        setInterval(() => {
+          this.dateTime = new Date();
+        }, 1000);
+      });
+
+      this.offeringService.getAllOfferings().subscribe(offerings => {
+        console.log(offerings);
+        this.offerings = offerings;
+      },
+      err => {
+        console.log('Got error' + err);
+        if (err.status === 404) {
+          this.snackbarService.open('No offering found');
+        } else if (err.status === 422) {
+          this.snackbarService.open(err.error);
+        } else {
+          this.snackbarService.open(err.message);
+        }
+      },
+      () => {
+        console.log('Completed successfully');
+      });
     }
-    this.userService.validateUserSubscription().subscribe(resp => {
-      this.loggedin = resp;
-    });
-
-    this.customerService.getCustomerNameList().subscribe(list => {
-      this.customerNameList = list;
-    });
-
-    this.zone.runOutsideAngular(() => {
-      setInterval(() => {
-        this.dateTime = new Date();
-      }, 1000);
-    });
-
-    this.offeringService.getAllOfferings().subscribe(offerings => {
-      console.log(offerings);
-      this.offerings = offerings;
-    },
-    err => {
-      console.log('Got error' + err);
-      if (err.status === 404) {
-        this.snackbarService.open('No offering found');
-      } else if (err.status === 422) {
-        this.snackbarService.open(err.error);
-      } else {
-        this.snackbarService.open(err.message);
-      }
-    },
-    () => {
-      console.log('Completed successfully');
-    });
 
   }
 
@@ -152,7 +144,7 @@ export class CenterBillAdd2Component implements OnInit {
     customerSelect.control.setValue(false);
   }
 
-  removeItemFromList(listname: string, total: string, item: Passport | Prewedding | Wedding | Birthday | Custom,
+  removeItemFromList(listname: string, total: string, item,
                      checkbox): void {
 
       // this[listname] = this[listname].filter(el => el.descr !== item.descr);

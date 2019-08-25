@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/report/dashboard', pathMatch: 'full', },
   { path: 'login',
   loadChildren: () => import('./starter/starter.module').then(mod => mod.StarterModule)
   },
@@ -17,6 +16,9 @@ const routes: Routes = [
   },
   { path: 'users',
     loadChildren: () => import('./starter/center-container/center-container.module').then(mod => mod.CenterContainerModule)
+  },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login', pathMatch: 'full',
   }
 ];
 

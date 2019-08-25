@@ -133,24 +133,25 @@ export class CenterBillListComponent implements OnInit {
     this.loggedin = this.userService.checkLoggedIn();
     if (!this.loggedin) {
       this.router.navigate(['/login']);
+    } else {
+
+      this.pendingPaymentQueryCategories =  this.billService.pendingPaymentQueryCategories;
+      this.selectedFilter = this.pendingPaymentQueryCategories[0];
+
+      this.billService.getAllBills().subscribe(result => {
+        this.dataSource = new MatTableDataSource(result);
+      },
+      err => {
+        if (err.status === 404) {
+          this.snackbarService.open('No bills generated yet.');
+        } else {
+          this.snackbarService.open(err.message);
+        }
+      },
+      () => {
+        console.log('Completed successfully');
+      });
     }
-
-    this.pendingPaymentQueryCategories =  this.billService.pendingPaymentQueryCategories;
-    this.selectedFilter = this.pendingPaymentQueryCategories[0];
-
-    this.billService.getAllBills().subscribe(result => {
-      this.dataSource = new MatTableDataSource(result);
-    },
-    err => {
-      if (err.status === 404) {
-        this.snackbarService.open('No bills generated yet.');
-      } else {
-        this.snackbarService.open(err.message);
-      }
-    },
-    () => {
-      console.log('Completed successfully');
-    });
   }
 
   showDetails(rowData) {

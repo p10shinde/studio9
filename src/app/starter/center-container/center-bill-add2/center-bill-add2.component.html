@@ -324,10 +324,10 @@
                   <td colspan="3">Grand Total</td>
                   <td>{{ billDiscountedTotal | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
                 </tr>
-                <!-- <tr *ngIf="advancepaycheck.value && advancePayAmount>0 && cartItemsTotal>0">
-                  <td colspan="2">Advance Payment</td>
+                <tr *ngIf="advancepaycheck.value && advancePayAmount>0 && itemListTotal>0">
+                  <td colspan="3">Advance Payment</td>
                   <td>{{ advancePayAmount | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
-                </tr> -->
+                </tr>
                 <tr>
                   <td colspan="4">
                       <div class="singleSeparator">

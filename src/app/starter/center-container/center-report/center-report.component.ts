@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
+import { UserService } from '../../Services/user.service';
+import { Router } from '@angular/router';
 
 declare var require: any;
 let Boost = require('highcharts/modules/boost');
@@ -67,11 +69,26 @@ export class CenterReportComponent implements OnInit {
         }]
     }]
   };
-  constructor() { }
+
+  loggedin = false;
+  constructor(
+    private userService: UserService,
+    private router: Router,
+  ) {
+
+
+  }
 
   ngOnInit() {
-
-    // Highcharts.chart('container', this.options);
+    this.loggedin = this.userService.checkLoggedIn();
+    if (!this.loggedin) {
+      this.router.navigate(['/login']);
+    } else {
+      this.userService.validateUserSubscription().subscribe(resp => {
+        this.loggedin = resp;
+      });
+    }
+      // Highcharts.chart('container', this.options);
   }
 
 }

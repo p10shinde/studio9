@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../Services/user.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,8 +10,12 @@ import { UserService } from '../../Services/user.service';
   styleUrls: ['./login.component.less']
 })
 export class LoginComponent implements OnInit {
-
-  constructor(private router: Router, private userService: UserService) { }
+  loggedin = false;
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
     // this.userService.validateUserSubscription().subscribe(resp => {
@@ -18,6 +23,11 @@ export class LoginComponent implements OnInit {
     //     this.router.navigate(['/report/list']);
     //   }
     // });
+    this.loggedin = this.userService.checkLoggedIn();
+    console.log(this.route);
+    if (this.loggedin) {
+      this.router.navigate(['/bill/add']);
+    }
   }
 
   validate(formData: NgForm) {
@@ -30,6 +40,8 @@ export class LoginComponent implements OnInit {
       // this.router.navigate(['/report/list']);
       this.router.navigate(['/bill/add']);
     });
+
+
 
   }
 

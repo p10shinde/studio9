@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CenterReportComponent } from './center-report/center-report.component';
 import { CenterBillListComponent } from './center-bill-list/center-bill-list.component';
-import { CenterBillAddComponent } from './center-bill-add/center-bill-add.component';
 import { CenterCustomerComponent } from './center-customer/center-customer.component';
 import { CenterBillAdd2Component } from './center-bill-add2/center-bill-add2.component';
 import { CenterUserComponent } from './center-user/center-user.component';
